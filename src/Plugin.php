@@ -115,7 +115,19 @@ class Plugin {
      */
     private function init_admin() {
         if ( is_admin() ) {
-            // Initialize admin controller
+            // Initialize Custom Post Type
+            $post_type = new \EventLayer\Admin\CPT\EventRulePostType();
+            $post_type->init();
+
+            // Initialize Meta Boxes
+            $meta_boxes = new \EventLayer\Admin\CPT\MetaBoxes();
+            $meta_boxes->init();
+
+            // Initialize Save Handler
+            $save_handler = new \EventLayer\Admin\CPT\SaveHandler();
+            $save_handler->init();
+
+            // Initialize admin controller (for menu integration)
             $admin_controller = new \EventLayer\Admin\Controllers\EventRulesController();
             $admin_controller->init();
         }
@@ -127,10 +139,7 @@ class Plugin {
      * @return void
      */
     public function activate() {
-        // Run the installer to create database tables
-        \EventLayer\Data\Installer::activate();
-        
-        // Flush rewrite rules
+        // Flush rewrite rules to register the new post type
         flush_rewrite_rules();
     }
 

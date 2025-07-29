@@ -1,0 +1,116 @@
+/**
+ * EventLayer Admin Styles
+ * 
+ * @package EventLayer
+ * @since 1.0.0
+ */
+
+/* Meta box styling */
+.eventlayer-meta-box .form-table th {
+    width: 200px;
+    vertical-align: top;
+    padding-top: 15px;
+}
+
+.eventlayer-meta-box .form-table td {
+    vertical-align: top;
+    padding-top: 10px;
+}
+
+.eventlayer-meta-box .description {
+    margin-top: 5px;
+    font-style: italic;
+    color: #666;
+}
+
+/* Child selectors styling */
+.child-selector-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.child-selector-row input {
+    flex: 1;
+}
+
+/* Parameters table styling */
+#parameters-container .wp-list-table {
+    margin-top: 10px;
+}
+
+#parameters-container .wp-list-table td {
+    vertical-align: middle;
+    padding: 8px;
+}
+
+#parameters-container .wp-list-table input,
+#parameters-container .wp-list-table select {
+    width: 100%;
+    max-width: 200px;
+}
+
+#parameters-container .wp-list-table th {
+    font-weight: 600;
+    background: #f1f1f1;
+}
+
+/* Button styling */
+.eventlayer-add-button {
+    margin-top: 10px;
+}
+
+/* Radio button styling */
+.eventlayer-meta-box fieldset label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+.eventlayer-meta-box fieldset input[type="radio"] {
+    margin-right: 8px;
+}
+
+/* Checkbox styling */
+.eventlayer-meta-box input[type="checkbox"] {
+    margin-right: 8px;
+}
+
+/* List table custom columns */
+.wp-list-table .column-event_type {
+    width: 15%;
+}
+
+.wp-list-table .column-location {
+    width: 15%;
+}
+
+.wp-list-table .column-selector {
+    width: 20%;
+}
+
+/* Help text styling */
+.eventlayer-help {
+    background: #f0f8ff;
+    border: 1px solid #c5d9ed;
+    border-radius: 4px;
+    padding: 10px;
+    margin: 10px 0;
+}
+
+.eventlayer-help h4 {
+    margin-top: 0;
+    color: #0073aa;
+}
+
+/* Error states */
+.eventlayer-error {
+    border-color: #dc3232 !important;
+    box-shadow: 0 0 2px rgba(220, 50, 50, 0.4);
+}
+
+/* Success states */
+.eventlayer-success {
+    border-color: #46b450 !important;
+    box-shadow: 0 0 2px rgba(70, 180, 80, 0.4);
+}
