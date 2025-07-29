@@ -1,0 +1,17 @@
+{
+    "name": "eventlayer/plugin",
+    "type": "wordpress-plugin",
+    "require": {
+        "php": ">=7.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "EventLayer\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "EventLayer\\Tests\\": "src/Tests/"
+        }
+    }
+}
