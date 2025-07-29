@@ -84,7 +84,59 @@ Parameters:
   - click_source: Static Value → "navigation"
 ```
 
-## 🛠️ Event Configuration
+## � Implementation Examples
+
+### External Link Button Tracking
+
+For a button like this:
+```html
+<a class="test-button" href="https://google.com" target="_blank">Button Text</a>
+```
+
+**EventLayer Configuration:**
+- **Event Type**: `link_click`
+- **Parent Selector**: `a.test-button`
+- **Site Location**: All Pages
+- **Trigger Delay**: 100ms
+- **Stop Propagation**: Yes
+
+**Parameters:**
+| Parameter Name | Target Type | Target Selector | Default Value |
+|----------------|-------------|-----------------|---------------|
+| `button_text` | Element Text | *(clicked element)* | - |
+| `button_url` | Element Attribute | `href` | - |
+| `button_target` | Element Attribute | `target` | - |
+| `button_class` | Static Value | - | `test-button` |
+
+**Result in dataLayer:**
+```javascript
+{
+  event: 'link_click',
+  button_text: 'Change This',
+  button_url: 'https://google.com',
+  button_target: '_blank',
+  button_class: 'test-button'
+}
+```
+
+### Alternative Selectors for Different Use Cases
+
+**Track all external links:**
+```
+Parent Selector: a[href^="http"]:not([href*="yourdomain.com"])
+```
+
+**Track specific URL:**
+```
+Parent Selector: a[href="https://google.com"]
+```
+
+**Track by multiple attributes:**
+```
+Parent Selector: a.test-button[target="_blank"]
+```
+
+## �🛠️ Event Configuration
 
 ### Event Settings
 - **Event Type**: The GA4 event name sent to dataLayer
