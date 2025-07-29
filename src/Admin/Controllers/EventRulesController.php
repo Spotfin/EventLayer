@@ -1,0 +1,86 @@
+<?php
+
+namespace EventLayer\Admin\Controllers;
+
+/**
+ * Controller for managing event rules in the admin.
+ * 
+ * @package EventLayer\Admin\Controllers
+ * @since 1.0.0
+ */
+class EventRulesController extends BaseController {
+
+    /**
+     * Initialize the controller.
+     *
+     * @return void
+     */
+    public function init() {
+        $this->register_hooks();
+    }
+
+    /**
+     * Register WordPress hooks.
+     *
+     * @return void
+     */
+    protected function register_hooks() {
+        add_action( 'admin_menu', array( $this, 'add_admin_menu' ) );
+        add_action( 'admin_init', array( $this, 'register_settings' ) );
+    }
+
+    /**
+     * Add admin menu pages.
+     *
+     * @return void
+     */
+    public function add_admin_menu() {
+        add_menu_page(
+            __( 'EventLayer', 'eventlayer' ),
+            __( 'EventLayer', 'eventlayer' ),
+            'manage_options',
+            'eventlayer',
+            array( $this, 'admin_page' ),
+            'dashicons-analytics',
+            30
+        );
+
+        add_submenu_page(
+            'eventlayer',
+            __( 'Event Rules', 'eventlayer' ),
+            __( 'Event Rules', 'eventlayer' ),
+            'manage_options',
+            'eventlayer-rules',
+            array( $this, 'rules_page' )
+        );
+    }
+
+    /**
+     * Register plugin settings.
+     *
+     * @return void
+     */
+    public function register_settings() {
+        // Register settings here
+    }
+
+    /**
+     * Display main admin page.
+     *
+     * @return void
+     */
+    public function admin_page() {
+        // Display main admin page
+        include dirname( __FILE__ ) . '/../Views/admin-main.php';
+    }
+
+    /**
+     * Display event rules page.
+     *
+     * @return void
+     */
+    public function rules_page() {
+        // Display event rules page
+        include dirname( __FILE__ ) . '/../Views/admin-rules.php';
+    }
+}
