@@ -44,6 +44,12 @@ class Frontend {
             true
         );
 
+        // Pass settings to frontend script
+        wp_localize_script( 'eventlayer-frontend', 'eventLayerSettings', array(
+            'debug' => (bool) get_option( 'eventlayer_debug_mode', 0 ),
+            'autoTrackPageView' => (bool) get_option( 'eventlayer_auto_pageview', 1 ),
+        ) );
+
         wp_enqueue_style(
             'eventlayer-frontend',
             plugin_dir_url( __FILE__ ) . '../Assets/css/frontend.css',

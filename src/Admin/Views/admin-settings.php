@@ -23,36 +23,8 @@ if ( ! defined( 'ABSPATH' ) ) {
                     <?php
                     settings_fields( 'eventlayer_settings' );
                     do_settings_sections( 'eventlayer_settings' );
+                    submit_button();
                     ?>
-                    
-                    <table class="form-table">
-                        <tr>
-                            <th scope="row"><?php esc_html_e( 'Debug Mode', 'eventlayer' ); ?></th>
-                            <td>
-                                <label>
-                                    <input type="checkbox" name="eventlayer_debug_mode" value="1" <?php checked( get_option( 'eventlayer_debug_mode' ), 1 ); ?> />
-                                    <?php esc_html_e( 'Enable debug logging in browser console', 'eventlayer' ); ?>
-                                </label>
-                                <p class="description">
-                                    <?php esc_html_e( 'When enabled, EventLayer will log events to the browser console for debugging.', 'eventlayer' ); ?>
-                                </p>
-                            </td>
-                        </tr>
-                        <tr>
-                            <th scope="row"><?php esc_html_e( 'Auto Page View Tracking', 'eventlayer' ); ?></th>
-                            <td>
-                                <label>
-                                    <input type="checkbox" name="eventlayer_auto_pageview" value="1" <?php checked( get_option( 'eventlayer_auto_pageview', 1 ), 1 ); ?> />
-                                    <?php esc_html_e( 'Automatically track page views', 'eventlayer' ); ?>
-                                </label>
-                                <p class="description">
-                                    <?php esc_html_e( 'Automatically push page_view events to the dataLayer on page load.', 'eventlayer' ); ?>
-                                </p>
-                            </td>
-                        </tr>
-                    </table>
-
-                    <?php submit_button(); ?>
                 </form>
             </div>
         </div>

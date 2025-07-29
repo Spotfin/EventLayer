@@ -150,9 +150,9 @@ class Plugin {
      */
     private function init_public() {
         if ( ! is_admin() ) {
-            // Initialize frontend controller
-            $frontend = new \EventLayer\Public\Frontend();
-            $frontend->init();
+            // Initialize script injector
+            $script_injector = new \EventLayer\Public\ScriptInjector();
+            $script_injector->init();
         }
     }
 
