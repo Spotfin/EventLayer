@@ -103,6 +103,9 @@ class Plugin {
 			return;
 		}
 
+		// Initialize Pro Manager
+		\EventLayer\Pro\ProManager::init();
+
 		// Initialize plugin components
 		$this->init_admin();
 		$this->init_public();
@@ -130,6 +133,9 @@ class Plugin {
 			// Initialize admin controller (for menu integration)
 			$admin_controller = new \EventLayer\Admin\Controllers\EventRulesController();
 			$admin_controller->init();
+
+			// Initialize development helper
+			\EventLayer\Admin\Helpers\DevHelper::init();
 		}
 	}
 

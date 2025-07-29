@@ -119,6 +119,8 @@ class MetaBoxes {
 					</p>
 				</td>
 			</tr>
+
+			<?php if ( \EventLayer\Pro\ProManager::has_feature( 'site_location' ) ) : ?>
 			<tr>
 				<th scope="row"><?php esc_html_e( 'Site Location', 'eventlayer' ); ?></th>
 				<td>
@@ -150,6 +152,23 @@ class MetaBoxes {
 					</p>
 				</td>
 			</tr>
+			<?php else : ?>
+			<tr>
+				<th scope="row"><?php esc_html_e( 'Site Location', 'eventlayer' ); ?></th>
+				<td>
+					<?php
+					\EventLayer\Pro\ProManager::render_feature_gate(
+						'site_location',
+						'Site Location Targeting',
+						'Target specific pages or sections of your site with EventLayer Pro.'
+					);
+					?>
+					<input type="hidden" name="site_location" value="all_pages" />
+				</td>
+			</tr>
+			<?php endif; ?>
+
+			<?php if ( \EventLayer\Pro\ProManager::has_feature( 'trigger_delay' ) ) : ?>
 			<tr>
 				<th scope="row">
 					<label for="trigger_delay"><?php esc_html_e( 'Event Trigger Delay', 'eventlayer' ); ?></label>
@@ -168,6 +187,23 @@ class MetaBoxes {
 					</p>
 				</td>
 			</tr>
+			<?php else : ?>
+			<tr>
+				<th scope="row"><?php esc_html_e( 'Event Trigger Delay', 'eventlayer' ); ?></th>
+				<td>
+					<?php
+					\EventLayer\Pro\ProManager::render_feature_gate(
+						'trigger_delay',
+						'Event Trigger Delay',
+						'Add delays to event triggers for better tracking accuracy with EventLayer Pro.'
+					);
+					?>
+					<input type="hidden" name="trigger_delay" value="0" />
+				</td>
+			</tr>
+			<?php endif; ?>
+
+			<?php if ( \EventLayer\Pro\ProManager::has_feature( 'stop_propagation' ) ) : ?>
 			<tr>
 				<th scope="row"><?php esc_html_e( 'Options', 'eventlayer' ); ?></th>
 				<td>
@@ -183,6 +219,21 @@ class MetaBoxes {
 					</p>
 				</td>
 			</tr>
+			<?php else : ?>
+			<tr>
+				<th scope="row"><?php esc_html_e( 'Options', 'eventlayer' ); ?></th>
+				<td>
+					<?php
+					\EventLayer\Pro\ProManager::render_feature_gate(
+						'stop_propagation',
+						'Event Propagation Control',
+						'Control event bubbling behavior with EventLayer Pro.'
+					);
+					?>
+					<input type="hidden" name="stop_propagation" value="0" />
+				</td>
+			</tr>
+			<?php endif; ?>
 		</table>
 		<?php
 	}
@@ -325,13 +376,22 @@ class MetaBoxes {
 										<option value="element_text" <?php selected( $param['target_type'] ?? '', 'element_text' ); ?>>
 											<?php esc_html_e( 'Element Text', 'eventlayer' ); ?>
 										</option>
+										<?php if ( \EventLayer\Pro\ProManager::has_feature( 'element_attribute' ) ) : ?>
 										<option value="element_attribute" <?php selected( $param['target_type'] ?? '', 'element_attribute' ); ?>>
 											<?php esc_html_e( 'Element Attribute', 'eventlayer' ); ?>
 										</option>
+										<?php endif; ?>
+										<?php if ( \EventLayer\Pro\ProManager::has_feature( 'url_parameter' ) ) : ?>
 										<option value="url_parameter" <?php selected( $param['target_type'] ?? '', 'url_parameter' ); ?>>
 											<?php esc_html_e( 'URL Parameter', 'eventlayer' ); ?>
 										</option>
+										<?php endif; ?>
 									</select>
+									<?php if ( ! \EventLayer\Pro\ProManager::has_feature( 'element_attribute' ) || ! \EventLayer\Pro\ProManager::has_feature( 'url_parameter' ) ) : ?>
+									<p class="description" style="margin-top: 5px; font-size: 11px; color: #666;">
+										🔒 <a href="<?php echo esc_url( \EventLayer\Pro\ProManager::get_upgrade_url() ); ?>">Upgrade to Pro</a> for Element Attribute and URL Parameter extraction
+									</p>
+									<?php endif; ?>
 								</td>
 								<td>
 									<input type="text" 
@@ -367,9 +427,18 @@ class MetaBoxes {
 								<select name="parameters[0][target_type]">
 									<option value="static"><?php esc_html_e( 'Static Value', 'eventlayer' ); ?></option>
 									<option value="element_text"><?php esc_html_e( 'Element Text', 'eventlayer' ); ?></option>
+									<?php if ( \EventLayer\Pro\ProManager::has_feature( 'element_attribute' ) ) : ?>
 									<option value="element_attribute"><?php esc_html_e( 'Element Attribute', 'eventlayer' ); ?></option>
+									<?php endif; ?>
+									<?php if ( \EventLayer\Pro\ProManager::has_feature( 'url_parameter' ) ) : ?>
 									<option value="url_parameter"><?php esc_html_e( 'URL Parameter', 'eventlayer' ); ?></option>
+									<?php endif; ?>
 								</select>
+								<?php if ( ! \EventLayer\Pro\ProManager::has_feature( 'element_attribute' ) || ! \EventLayer\Pro\ProManager::has_feature( 'url_parameter' ) ) : ?>
+								<p class="description" style="margin-top: 5px; font-size: 11px; color: #666;">
+									🔒 <a href="<?php echo esc_url( \EventLayer\Pro\ProManager::get_upgrade_url() ); ?>">Upgrade to Pro</a> for Element Attribute and URL Parameter extraction
+								</p>
+								<?php endif; ?>
 							</td>
 							<td>
 								<input type="text" 
