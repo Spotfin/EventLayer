@@ -12,15 +12,19 @@ EventLayer is a WordPress Plugin for managing custom DataLayer and GTM Events.
 
 == Description ==
 
-EventLayer allows site administrators to define custom GA4-style DataLayer events directly from the WordPress admin panel. The plugin stores event rules and automatically injects JavaScript to push events to window.dataLayer for Google Tag Manager and Google Analytics 4 integration.
+EventLayer allows site administrators to define custom GA4-style DataLayer events directly from the WordPress admin panel. The plugin uses WordPress custom post types to store event rules and automatically injects JavaScript to push events to window.dataLayer for Google Tag Manager and Google Analytics 4 integration.
 
 **Key Features:**
 
-* Define custom DataLayer events from WordPress admin
-* Store event rules in the database
+* Define custom DataLayer events from WordPress admin using native post editing
+* Store event rules as WordPress posts with full revision history
 * Automatic JavaScript injection for event tracking
+* Advanced parameter configuration with dynamic value extraction
+* Site location targeting (all pages, homepage, specific pages)
+* Event trigger delays and propagation control
+* Debug mode for troubleshooting
 * Modern PHP architecture with PSR-4 autoloading
-* Clean, extensible codebase
+* Clean, extensible codebase following WordPress coding standards
 
 **Perfect for:**
 
@@ -33,7 +37,10 @@ EventLayer allows site administrators to define custom GA4-style DataLayer event
 
 1. Upload the plugin files to the `/wp-content/plugins/eventlayer` directory, or install the plugin through the WordPress plugins screen directly.
 2. Activate the plugin through the 'Plugins' screen in WordPress.
-3. Use the EventLayer settings screen to configure your event rules.
+3. Navigate to EventLayer in the WordPress admin menu.
+4. Create your first event rule by clicking "Add New".
+5. Configure the event type, triggers, and parameters.
+6. Publish the event rule to activate it.
 
 == Frequently Asked Questions ==
 
@@ -59,8 +66,12 @@ The plugin itself doesn't collect personal data. However, the events you create 
 
 = 1.0.0 =
 * Initial release
-* Event rules management
-* Database storage for event configurations
+* Custom post type architecture for event rules
+* Advanced parameter configuration with dynamic value extraction
+* Site location targeting
+* Event trigger delays and propagation control
+* Debug mode and comprehensive logging
+* WordPress coding standards compliance
 * Automatic JavaScript injection
 
 == Upgrade Notice ==

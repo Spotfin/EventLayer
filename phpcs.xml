@@ -1,0 +1,88 @@
+<?xml version="1.0"?>
+<ruleset name="EventLayer">
+    <description>EventLayer WordPress Plugin Coding Standards</description>
+
+    <!-- Check all PHP files in src/ -->
+    <file>./src/</file>
+    <file>./eventlayer.php</file>
+
+    <!-- Show sniff codes in all reports -->
+    <arg value="ps"/>
+
+    <!-- Use colors in output -->
+    <arg name="colors"/>
+
+    <!-- Show progress while running -->
+    <arg value="p"/>
+
+    <!-- Parallel processing -->
+    <arg name="parallel" value="8"/>
+
+    <!-- Cache results -->
+    <arg name="cache" value=".phpcs.cache"/>
+
+    <!-- Extensions to check -->
+    <arg name="extensions" value="php"/>
+
+    <!-- Ignore vendor directory -->
+    <exclude-pattern>./vendor/</exclude-pattern>
+    <exclude-pattern>./node_modules/</exclude-pattern>
+
+    <!-- Include WordPress Coding Standards -->
+    <rule ref="WordPress">
+        <!-- Allow short array syntax -->
+        <exclude name="Generic.Arrays.DisallowShortArraySyntax"/>
+        
+        <!-- Allow closures without explicit scope -->
+        <exclude name="Squiz.Scope.MethodScope.Missing"/>
+        
+        <!-- Allow file names with classes -->
+        <exclude name="WordPress.Files.FileName"/>
+        
+        <!-- Allow direct output in templates -->
+        <exclude name="WordPress.Security.EscapeOutput.OutputNotEscaped"/>
+    </rule>
+
+    <!-- Include WordPress Extra rules -->
+    <rule ref="WordPress-Extra">
+        <!-- Allow short array syntax -->
+        <exclude name="Generic.Arrays.DisallowShortArraySyntax"/>
+    </rule>
+
+    <!-- Check for PHP compatibility -->
+    <rule ref="PHPCompatibilityWP"/>
+    
+    <!-- Set minimum PHP version -->
+    <config name="testVersion" value="7.4-"/>
+
+    <!-- Allow WordPress functions -->
+    <rule ref="WordPress.WP.GlobalVariablesOverride.Prohibited">
+        <exclude-pattern>*</exclude-pattern>
+    </rule>
+
+    <!-- Relaxed nonce verification for admin pages -->
+    <rule ref="WordPress.Security.NonceVerification.Missing">
+        <exclude-pattern>./src/Admin/Views/*</exclude-pattern>
+    </rule>
+
+    <!-- Allow direct database calls for our repository pattern -->
+    <rule ref="WordPress.DB.DirectDatabaseQuery.DirectQuery">
+        <exclude-pattern>./src/Data/*</exclude-pattern>
+    </rule>
+
+    <!-- Custom line length -->
+    <rule ref="Generic.Files.LineLength">
+        <properties>
+            <property name="lineLimit" value="120"/>
+            <property name="absoluteLineLimit" value="150"/>
+        </properties>
+    </rule>
+
+    <!-- Custom indentation -->
+    <rule ref="Generic.WhiteSpace.ScopeIndent">
+        <properties>
+            <property name="indent" value="4"/>
+            <property name="tabIndent" value="true"/>
+        </properties>
+    </rule>
+</ruleset>
