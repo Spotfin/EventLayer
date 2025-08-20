@@ -45,15 +45,6 @@ class MetaBoxes {
 		);
 
 		add_meta_box(
-			'eventlayer_schedule',
-			__( 'Schedule', 'eventlayer' ),
-			array( $this, 'schedule_callback' ),
-			EventRulePostType::POST_TYPE,
-			'side',
-			'high'
-		);
-
-		add_meta_box(
 			'eventlayer_parameters',
 			__( 'Parameters', 'eventlayer' ),
 			array( $this, 'parameters_callback' ),
@@ -172,6 +163,14 @@ class MetaBoxes {
 		$site_location    = get_post_meta( $post->ID, '_site_location', true ) ?: 'all_pages';
 		$trigger_delay    = get_post_meta( $post->ID, '_trigger_delay', true );
 		$stop_propagation = get_post_meta( $post->ID, '_stop_propagation', true );
+		$start            = get_post_meta( $post->ID, '_schedule_start', true );
+		$end              = get_post_meta( $post->ID, '_schedule_end', true );
+
+		$start_date = $start ? substr( $start, 0, 10 ) : '';
+		$start_time = $start ? substr( $start, 11, 5 ) : '';
+		$end_date   = $end ? substr( $end, 0, 10 ) : '';
+		$end_time   = $end ? substr( $end, 11, 5 ) : '';
+
 		?>
 		<table class="form-table">
 			<tr>
@@ -180,60 +179,33 @@ class MetaBoxes {
 				</th>
 				<td>
 					<input type="text" 
-							id="event_type" 
-							name="event_type" 
-							value="<?php echo esc_attr( $event_type ); ?>" 
-							class="regular-text" 
-							placeholder="<?php esc_attr_e( 'e.g., button_click, form_submit', 'eventlayer' ); ?>" />
+						id="event_type" 
+						name="event_type" 
+						value="<?php echo esc_attr( $event_type ); ?>" 
+						class="regular-text" 
+						placeholder="<?php esc_attr_e( 'e.g., button_click, form_submit', 'eventlayer' ); ?>" />
 					<p class="description">
 						<?php esc_html_e( 'The GA4 event name that will be sent to the dataLayer.', 'eventlayer' ); ?>
 					</p>
 				</td>
 			</tr>
-
 			<?php if ( \EventLayer\Pro\ProManager::has_feature( 'site_location' ) ) : ?>
 			<tr>
 				<th scope="row"><?php esc_html_e( 'Site Location', 'eventlayer' ); ?></th>
 				<td>
 					<fieldset>
-						<label>
-							<input type="radio" 
-									name="site_location" 
-									value="all_pages" 
-									<?php checked( $site_location, 'all_pages' ); ?> />
-							<?php esc_html_e( 'All Pages', 'eventlayer' ); ?>
-						</label><br>
-						<label>
-							<input type="radio" 
-									name="site_location" 
-									value="homepage" 
-									<?php checked( $site_location, 'homepage' ); ?> />
-							<?php esc_html_e( 'Homepage Only', 'eventlayer' ); ?>
-						</label><br>
-						<label>
-							<input type="radio" 
-									name="site_location" 
-									value="specific_pages" 
-									<?php checked( $site_location, 'specific_pages' ); ?> />
-							<?php esc_html_e( 'Specific Pages', 'eventlayer' ); ?>
-						</label>
+						<label><input type="radio" name="site_location" value="all_pages" <?php checked( $site_location, 'all_pages' ); ?> /> <?php esc_html_e( 'All Pages', 'eventlayer' ); ?></label><br>
+						<label><input type="radio" name="site_location" value="homepage" <?php checked( $site_location, 'homepage' ); ?> /> <?php esc_html_e( 'Homepage Only', 'eventlayer' ); ?></label><br>
+						<label><input type="radio" name="site_location" value="specific_pages" <?php checked( $site_location, 'specific_pages' ); ?> /> <?php esc_html_e( 'Specific Pages', 'eventlayer' ); ?></label>
 					</fieldset>
-					<p class="description">
-						<?php esc_html_e( 'Choose where this event rule should be active.', 'eventlayer' ); ?>
-					</p>
+					<p class="description"><?php esc_html_e( 'Choose where this event rule should be active.', 'eventlayer' ); ?></p>
 				</td>
 			</tr>
 			<?php else : ?>
 			<tr>
 				<th scope="row"><?php esc_html_e( 'Site Location', 'eventlayer' ); ?></th>
 				<td>
-					<?php
-					\EventLayer\Pro\ProManager::render_feature_gate(
-						'site_location',
-						'Site Location Targeting',
-						'Target specific pages or sections of your site with EventLayer Pro.'
-					);
-					?>
+					<?php \EventLayer\Pro\ProManager::render_feature_gate( 'site_location', 'Site Location Targeting', 'Target specific pages or sections of your site with EventLayer Pro.' ); ?>
 					<input type="hidden" name="site_location" value="all_pages" />
 				</td>
 			</tr>
@@ -241,34 +213,18 @@ class MetaBoxes {
 
 			<?php if ( \EventLayer\Pro\ProManager::has_feature( 'trigger_delay' ) ) : ?>
 			<tr>
-				<th scope="row">
-					<label for="trigger_delay"><?php esc_html_e( 'Event Trigger Delay', 'eventlayer' ); ?></label>
-				</th>
+				<th scope="row"><label for="trigger_delay"><?php esc_html_e( 'Event Trigger Delay', 'eventlayer' ); ?></label></th>
 				<td>
-					<input type="number" 
-							id="trigger_delay" 
-							name="trigger_delay" 
-							value="<?php echo esc_attr( $trigger_delay ); ?>" 
-							min="0" 
-							step="100" 
-							class="small-text" /> 
+					<input type="number" id="trigger_delay" name="trigger_delay" value="<?php echo esc_attr( $trigger_delay ); ?>" min="0" step="100" class="small-text" />
 					<span><?php esc_html_e( 'milliseconds', 'eventlayer' ); ?></span>
-					<p class="description">
-						<?php esc_html_e( 'Delay before the event is triggered (0 = immediate).', 'eventlayer' ); ?>
-					</p>
+					<p class="description"><?php esc_html_e( 'Delay before the event is triggered (0 = immediate).', 'eventlayer' ); ?></p>
 				</td>
 			</tr>
 			<?php else : ?>
 			<tr>
 				<th scope="row"><?php esc_html_e( 'Event Trigger Delay', 'eventlayer' ); ?></th>
 				<td>
-					<?php
-					\EventLayer\Pro\ProManager::render_feature_gate(
-						'trigger_delay',
-						'Event Trigger Delay',
-						'Add delays to event triggers for better tracking accuracy with EventLayer Pro.'
-					);
-					?>
+					<?php \EventLayer\Pro\ProManager::render_feature_gate( 'trigger_delay', 'Event Trigger Delay', 'Add delays to event triggers for better tracking accuracy with EventLayer Pro.' ); ?>
 					<input type="hidden" name="trigger_delay" value="0" />
 				</td>
 			</tr>
@@ -278,33 +234,56 @@ class MetaBoxes {
 			<tr>
 				<th scope="row"><?php esc_html_e( 'Options', 'eventlayer' ); ?></th>
 				<td>
-					<label>
-						<input type="checkbox" 
-								name="stop_propagation" 
-								value="1" 
-								<?php checked( $stop_propagation, 1 ); ?> />
-						<?php esc_html_e( 'Stop Propagation', 'eventlayer' ); ?>
-					</label>
-					<p class="description">
-						<?php esc_html_e( 'Prevent the event from bubbling up to parent elements.', 'eventlayer' ); ?>
-					</p>
+					<label><input type="checkbox" name="stop_propagation" value="1" <?php checked( $stop_propagation, 1 ); ?> /> <?php esc_html_e( 'Stop Propagation', 'eventlayer' ); ?></label>
+					<p class="description"><?php esc_html_e( 'Prevent the event from bubbling up to parent elements.', 'eventlayer' ); ?></p>
 				</td>
 			</tr>
 			<?php else : ?>
 			<tr>
 				<th scope="row"><?php esc_html_e( 'Options', 'eventlayer' ); ?></th>
 				<td>
-					<?php
-					\EventLayer\Pro\ProManager::render_feature_gate(
-						'stop_propagation',
-						'Event Propagation Control',
-						'Control event bubbling behavior with EventLayer Pro.'
-					);
-					?>
+					<?php \EventLayer\Pro\ProManager::render_feature_gate( 'stop_propagation', 'Event Propagation Control', 'Control event bubbling behavior with EventLayer Pro.' ); ?>
 					<input type="hidden" name="stop_propagation" value="0" />
 				</td>
 			</tr>
 			<?php endif; ?>
+
+			<?php $has_scheduling = \EventLayer\Pro\ProManager::has_feature( 'scheduling' ); ?>
+			<tr>
+				<th scope="row"><?php esc_html_e( 'Schedule', 'eventlayer' ); ?></th>
+				<td>
+					<?php if ( $has_scheduling ) : ?>
+						<div style="display:flex; gap:8px; flex-wrap:wrap;">
+							<div style="flex:1; min-width:140px;">
+								<label for="schedule_start_date" class="screen-reader-text"><?php esc_html_e( 'Start Date', 'eventlayer' ); ?></label>
+								<input type="date" id="schedule_start_date" name="schedule_start_date" value="<?php echo esc_attr( $start_date ); ?>" class="small-text" style="width: 100%;" />
+							</div>
+							<div style="flex:1; min-width:120px;">
+								<label for="schedule_start_time" class="screen-reader-text"><?php esc_html_e( 'Start Time', 'eventlayer' ); ?></label>
+								<input type="time" id="schedule_start_time" name="schedule_start_time" value="<?php echo esc_attr( $start_time ); ?>" class="small-text" style="width: 100%;" />
+							</div>
+						</div>
+						<div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:6px;">
+							<div style="flex:1; min-width:140px;">
+								<label for="schedule_end_date" class="screen-reader-text"><?php esc_html_e( 'End Date', 'eventlayer' ); ?></label>
+								<input type="date" id="schedule_end_date" name="schedule_end_date" value="<?php echo esc_attr( $end_date ); ?>" class="small-text" style="width: 100%;" />
+							</div>
+							<div style="flex:1; min-width:120px;">
+								<label for="schedule_end_time" class="screen-reader-text"><?php esc_html_e( 'End Time', 'eventlayer' ); ?></label>
+								<input type="time" id="schedule_end_time" name="schedule_end_time" value="<?php echo esc_attr( $end_time ); ?>" class="small-text" style="width: 100%;" />
+							</div>
+						</div>
+						<p class="description"><?php esc_html_e( 'If set, the rule will only be active between the start and end times (site timezone). Leave blank for always on.', 'eventlayer' ); ?></p>
+					<?php else : ?>
+						<?php \EventLayer\Pro\ProManager::render_feature_gate( 'scheduling', __( 'Scheduling', 'eventlayer' ), __( 'Schedule event rules to start and stop automatically with EventLayer Pro.', 'eventlayer' ) ); ?>
+						<input type="hidden" name="schedule_start_date" value="<?php echo esc_attr( $start_date ); ?>" />
+						<input type="hidden" name="schedule_start_time" value="<?php echo esc_attr( $start_time ); ?>" />
+						<input type="hidden" name="schedule_end_date" value="<?php echo esc_attr( $end_date ); ?>" />
+						<input type="hidden" name="schedule_end_time" value="<?php echo esc_attr( $end_time ); ?>" />
+					<?php endif; ?>
+				</td>
+			</tr>
+
 		</table>
 		<?php
 	}
@@ -542,4 +521,5 @@ class MetaBoxes {
 		</div>
 		<?php
 	}
+
 }

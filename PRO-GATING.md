@@ -83,7 +83,7 @@ private static $pro_features_enabled = false; // Enable gating
 ### Core Files
 - `src/Pro/ProManager.php` - Central gating logic
 - `src/Admin/CPT/MetaBoxes.php` - UI gating implementation
-- `src/Admin/Controllers/EventRulesController.php` - Rule limits
+ - `src/Admin/Controllers/AdminController.php` - Admin menus, settings, and rule limit notices
 - `src/Admin/Helpers/DevHelper.php` - Development tools
 
 ### Key Methods

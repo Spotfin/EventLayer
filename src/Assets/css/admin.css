@@ -114,3 +114,29 @@
     border-color: #46b450 !important;
     box-shadow: 0 0 2px rgba(70, 180, 80, 0.4);
 }
+
+/* Hero/logo section on main admin page */
+.eventlayer-hero {
+    margin: 16px 0 24px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+}
+
+.eventlayer-hero-logo {
+    background: linear-gradient(135deg, #1f2937 0%, #0f172a 100%);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+    border-radius: 10px;
+    padding: 14px 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+}
+
+.eventlayer-hero-logo img {
+    display: block;
+    max-width: 260px;
+    height: auto;
+}

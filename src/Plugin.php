@@ -131,7 +131,7 @@ class Plugin {
 			$save_handler->init();
 
 			// Initialize admin controller (for menu integration)
-			$admin_controller = new \EventLayer\Admin\Controllers\EventRulesController();
+			$admin_controller = new \EventLayer\Admin\Controllers\AdminController();
 			$admin_controller->init();
 
 			// Initialize development helper

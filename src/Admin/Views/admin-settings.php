@@ -17,7 +17,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 	
 	<div class="eventlayer-settings-content">
 		<div class="postbox">
-			<h2 class="hndle"><?php esc_html_e( 'General Settings', 'eventlayer' ); ?></h2>
 			<div class="inside">
 				<form method="post" action="options.php">
 					<?php
@@ -30,7 +29,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 		</div>
 
 		<div class="postbox">
-			<h2 class="hndle"><?php esc_html_e( 'Information', 'eventlayer' ); ?></h2>
 			<div class="inside">
 				<h3><?php esc_html_e( 'Plugin Information', 'eventlayer' ); ?></h3>
 				<p><strong><?php esc_html_e( 'Version:', 'eventlayer' ); ?></strong> 1.0.0</p>
