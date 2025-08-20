@@ -112,5 +112,17 @@ class SaveHandler {
 			}
 		}
 		update_post_meta( $post_id, '_parameters', maybe_serialize( $parameters ) );
+
+		// Save Scheduling (Pro feature; values persist even if not active)
+		$sd = isset( $_POST['schedule_start_date'] ) ? sanitize_text_field( wp_unslash( $_POST['schedule_start_date'] ) ) : '';
+		$st = isset( $_POST['schedule_start_time'] ) ? sanitize_text_field( wp_unslash( $_POST['schedule_start_time'] ) ) : '';
+		$ed = isset( $_POST['schedule_end_date'] ) ? sanitize_text_field( wp_unslash( $_POST['schedule_end_date'] ) ) : '';
+		$et = isset( $_POST['schedule_end_time'] ) ? sanitize_text_field( wp_unslash( $_POST['schedule_end_time'] ) ) : '';
+
+		$start_raw = ( $sd && $st ) ? ( $sd . 'T' . $st ) : ( $sd ?: '' );
+		$end_raw   = ( $ed && $et ) ? ( $ed . 'T' . $et ) : ( $ed ?: '' );
+
+		update_post_meta( $post_id, '_schedule_start', $start_raw );
+		update_post_meta( $post_id, '_schedule_end', $end_raw );
 	}
 }

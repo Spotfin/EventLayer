@@ -45,6 +45,15 @@ class MetaBoxes {
 		);
 
 		add_meta_box(
+			'eventlayer_schedule',
+			__( 'Schedule', 'eventlayer' ),
+			array( $this, 'schedule_callback' ),
+			EventRulePostType::POST_TYPE,
+			'side',
+			'high'
+		);
+
+		add_meta_box(
 			'eventlayer_parameters',
 			__( 'Parameters', 'eventlayer' ),
 			array( $this, 'parameters_callback' ),
@@ -52,6 +61,56 @@ class MetaBoxes {
 			'normal',
 			'high'
 		);
+	}
+
+	/**
+	 * Schedule meta box callback (Pro feature).
+	 *
+	 * @param \WP_Post $post Current post object.
+	 * @return void
+	 */
+	public function schedule_callback( $post ) {
+		$start = get_post_meta( $post->ID, '_schedule_start', true );
+		$end   = get_post_meta( $post->ID, '_schedule_end', true );
+
+		// Split into date and time parts for UI.
+		$start_date = $start ? substr( $start, 0, 10 ) : '';
+		$start_time = $start ? substr( $start, 11, 5 ) : '';
+		$end_date   = $end ? substr( $end, 0, 10 ) : '';
+		$end_time   = $end ? substr( $end, 11, 5 ) : '';
+
+		if ( ! \EventLayer\Pro\ProManager::has_feature( 'scheduling' ) ) {
+			// Show gate and keep hidden fields so saves don't erase values inadvertently.
+			\EventLayer\Pro\ProManager::render_feature_gate(
+				'scheduling',
+				__( 'Scheduling', 'eventlayer' ),
+				__( 'Schedule event rules to start and stop automatically with EventLayer Pro.', 'eventlayer' )
+			);
+			// Preserve values via hidden fields
+			echo '<input type="hidden" name="schedule_start_date" value="' . esc_attr( $start_date ) . '" />';
+			echo '<input type="hidden" name="schedule_start_time" value="' . esc_attr( $start_time ) . '" />';
+			echo '<input type="hidden" name="schedule_end_date" value="' . esc_attr( $end_date ) . '" />';
+			echo '<input type="hidden" name="schedule_end_time" value="' . esc_attr( $end_time ) . '" />';
+			return;
+		}
+
+		echo '<p><strong>' . esc_html__( 'Start', 'eventlayer' ) . '</strong><br/>';
+		echo '<label for="schedule_start_date" class="screen-reader-text">' . esc_html__( 'Start Date', 'eventlayer' ) . '</label>';
+		echo '<input type="date" id="schedule_start_date" name="schedule_start_date" value="' . esc_attr( $start_date ) . '" class="small-text" style="width: 100%;" />';
+		echo '<br/>';
+		echo '<label for="schedule_start_time" class="screen-reader-text">' . esc_html__( 'Start Time', 'eventlayer' ) . '</label>';
+		echo '<input type="time" id="schedule_start_time" name="schedule_start_time" value="' . esc_attr( $start_time ) . '" class="small-text" style="width: 100%;" />';
+		echo '</p>';
+
+		echo '<p><strong>' . esc_html__( 'End', 'eventlayer' ) . '</strong><br/>';
+		echo '<label for="schedule_end_date" class="screen-reader-text">' . esc_html__( 'End Date', 'eventlayer' ) . '</label>';
+		echo '<input type="date" id="schedule_end_date" name="schedule_end_date" value="' . esc_attr( $end_date ) . '" class="small-text" style="width: 100%;" />';
+		echo '<br/>';
+		echo '<label for="schedule_end_time" class="screen-reader-text">' . esc_html__( 'End Time', 'eventlayer' ) . '</label>';
+		echo '<input type="time" id="schedule_end_time" name="schedule_end_time" value="' . esc_attr( $end_time ) . '" class="small-text" style="width: 100%;" />';
+		echo '</p>';
+
+		echo '<p class="description">' . esc_html__( 'If set, the rule will only be active between the start and end times (site timezone). Leave blank for always on.', 'eventlayer' ) . '</p>';
 	}
 
 	/**
@@ -76,6 +135,18 @@ class MetaBoxes {
 			array( 'jquery' ),
 			'1.0.0',
 			true
+		);
+
+		// Pass Pro feature flags to JS so UI can gate options consistently.
+		wp_localize_script(
+			'eventlayer-admin',
+			'eventLayerAdminConfig',
+			array(
+				'features' => array(
+					'element_attribute' => \EventLayer\Pro\ProManager::has_feature( 'element_attribute' ),
+					'url_parameter'     => \EventLayer\Pro\ProManager::has_feature( 'url_parameter' ),
+				),
+			)
 		);
 
 		wp_enqueue_style(
@@ -338,8 +409,35 @@ class MetaBoxes {
 		// Get current values
 		$parameters = get_post_meta( $post->ID, '_parameters', true );
 		$parameters = $parameters ? maybe_unserialize( $parameters ) : array();
+
+		// Base target types with filter to allow Pro (and 3rd parties) to add more
+		$target_types = apply_filters(
+			'eventlayer_parameter_target_types',
+			array(
+				'static'        => __( 'Static Value', 'eventlayer' ),
+				'element_text'  => __( 'Element Text', 'eventlayer' ),
+			)
+		);
 		?>
 		<div id="parameters-container">
+			<!-- Hidden template for adding parameters (cloned by JS) -->
+			<table style="display:none;">
+				<tbody>
+					<tr id="parameter-template-row" class="parameter-row">
+						<td><input type="text" name="__NAME__[name]" value="" placeholder="<?php esc_attr_e( 'parameter_name', 'eventlayer' ); ?>" class="regular-text" /></td>
+						<td><input type="text" name="__NAME__[default_value]" value="" placeholder="<?php esc_attr_e( 'Default value', 'eventlayer' ); ?>" class="regular-text" /></td>
+						<td>
+							<select name="__NAME__[target_type]">
+								<?php foreach ( $target_types as $slug => $label ) : ?>
+									<option value="<?php echo esc_attr( $slug ); ?>"><?php echo esc_html( $label ); ?></option>
+								<?php endforeach; ?>
+							</select>
+						</td>
+						<td><input type="text" name="__NAME__[target_selector]" value="" placeholder="<?php esc_attr_e( 'CSS selector or attribute name', 'eventlayer' ); ?>" class="regular-text" /></td>
+						<td><button type="button" class="button remove-parameter"><?php esc_html_e( 'Remove', 'eventlayer' ); ?></button></td>
+					</tr>
+				</tbody>
+			</table>
 			<table class="wp-list-table widefat fixed striped">
 				<thead>
 					<tr>
@@ -370,28 +468,12 @@ class MetaBoxes {
 								</td>
 								<td>
 									<select name="parameters[<?php echo $index; ?>][target_type]">
-										<option value="static" <?php selected( $param['target_type'] ?? '', 'static' ); ?>>
-											<?php esc_html_e( 'Static Value', 'eventlayer' ); ?>
-										</option>
-										<option value="element_text" <?php selected( $param['target_type'] ?? '', 'element_text' ); ?>>
-											<?php esc_html_e( 'Element Text', 'eventlayer' ); ?>
-										</option>
-										<?php if ( \EventLayer\Pro\ProManager::has_feature( 'element_attribute' ) ) : ?>
-										<option value="element_attribute" <?php selected( $param['target_type'] ?? '', 'element_attribute' ); ?>>
-											<?php esc_html_e( 'Element Attribute', 'eventlayer' ); ?>
-										</option>
-										<?php endif; ?>
-										<?php if ( \EventLayer\Pro\ProManager::has_feature( 'url_parameter' ) ) : ?>
-										<option value="url_parameter" <?php selected( $param['target_type'] ?? '', 'url_parameter' ); ?>>
-											<?php esc_html_e( 'URL Parameter', 'eventlayer' ); ?>
-										</option>
-										<?php endif; ?>
+										<?php foreach ( $target_types as $slug => $label ) : ?>
+											<option value="<?php echo esc_attr( $slug ); ?>" <?php selected( $param['target_type'] ?? '', $slug ); ?>>
+												<?php echo esc_html( $label ); ?>
+											</option>
+										<?php endforeach; ?>
 									</select>
-									<?php if ( ! \EventLayer\Pro\ProManager::has_feature( 'element_attribute' ) || ! \EventLayer\Pro\ProManager::has_feature( 'url_parameter' ) ) : ?>
-									<p class="description" style="margin-top: 5px; font-size: 11px; color: #666;">
-										🔒 <a href="<?php echo esc_url( \EventLayer\Pro\ProManager::get_upgrade_url() ); ?>">Upgrade to Pro</a> for Element Attribute and URL Parameter extraction
-									</p>
-									<?php endif; ?>
 								</td>
 								<td>
 									<input type="text" 
@@ -425,20 +507,10 @@ class MetaBoxes {
 							</td>
 							<td>
 								<select name="parameters[0][target_type]">
-									<option value="static"><?php esc_html_e( 'Static Value', 'eventlayer' ); ?></option>
-									<option value="element_text"><?php esc_html_e( 'Element Text', 'eventlayer' ); ?></option>
-									<?php if ( \EventLayer\Pro\ProManager::has_feature( 'element_attribute' ) ) : ?>
-									<option value="element_attribute"><?php esc_html_e( 'Element Attribute', 'eventlayer' ); ?></option>
-									<?php endif; ?>
-									<?php if ( \EventLayer\Pro\ProManager::has_feature( 'url_parameter' ) ) : ?>
-									<option value="url_parameter"><?php esc_html_e( 'URL Parameter', 'eventlayer' ); ?></option>
-									<?php endif; ?>
+									<?php foreach ( $target_types as $slug => $label ) : ?>
+										<option value="<?php echo esc_attr( $slug ); ?>"><?php echo esc_html( $label ); ?></option>
+									<?php endforeach; ?>
 								</select>
-								<?php if ( ! \EventLayer\Pro\ProManager::has_feature( 'element_attribute' ) || ! \EventLayer\Pro\ProManager::has_feature( 'url_parameter' ) ) : ?>
-								<p class="description" style="margin-top: 5px; font-size: 11px; color: #666;">
-									🔒 <a href="<?php echo esc_url( \EventLayer\Pro\ProManager::get_upgrade_url() ); ?>">Upgrade to Pro</a> for Element Attribute and URL Parameter extraction
-								</p>
-								<?php endif; ?>
 							</td>
 							<td>
 								<input type="text" 
@@ -461,6 +533,12 @@ class MetaBoxes {
 					<?php esc_html_e( 'Add Parameter', 'eventlayer' ); ?>
 				</button>
 			</p>
+			<?php if ( ! \EventLayer\Pro\ProManager::has_feature( 'element_attribute' ) || ! \EventLayer\Pro\ProManager::has_feature( 'url_parameter' ) ) : ?>
+			<p class="description" style="margin-top: 8px; font-size: 12px; color: #666;">
+				🔒 <?php esc_html_e( 'Upgrade to Pro', 'eventlayer' ); ?>
+				<a href="<?php echo esc_url( \EventLayer\Pro\ProManager::get_upgrade_url() ); ?>" target="_blank"><?php esc_html_e( 'for Element Attribute and URL Parameter extraction', 'eventlayer' ); ?></a>
+			</p>
+			<?php endif; ?>
 		</div>
 		<?php
 	}

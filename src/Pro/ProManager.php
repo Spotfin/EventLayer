@@ -15,6 +15,11 @@ namespace EventLayer\Pro;
 class ProManager {
 
 	/**
+	 * Default license validation endpoint.
+	 */
+	private const VALIDATION_ENDPOINT = 'https://eventlayerpro.com/wp-json/eventlayer/v1/validate';
+
+	/**
 	 * Whether pro features are enabled
 	 * Set to true to disable all gating (everything free)
 	 * Set to false to enable pro gating
@@ -36,6 +41,25 @@ class ProManager {
 	public static function init() {
 		// Check if pro version is active (placeholder for future)
 		self::$pro_version_active = self::check_pro_license();
+
+		// Inject Pro-only parameter target types into the editor when Pro is active.
+		add_filter( 'eventlayer_parameter_target_types', array( __CLASS__, 'filter_parameter_target_types' ) );
+	}
+
+	/**
+	 * Filter to add Pro-only parameter target types to the dropdown when Pro is active.
+	 *
+	 * @param array $types Associative array slug => label.
+	 * @return array
+	 */
+	public static function filter_parameter_target_types( $types ) {
+		if ( self::has_feature( 'element_attribute' ) ) {
+			$types['element_attribute'] = __( 'Element Attribute', 'eventlayer' );
+		}
+		if ( self::has_feature( 'url_parameter' ) ) {
+			$types['url_parameter'] = __( 'URL Parameter', 'eventlayer' );
+		}
+		return $types;
 	}
 
 	/**
@@ -77,6 +101,7 @@ class ProManager {
 			'import_export',
 			'unlimited_rules',
 			'advanced_selectors',
+			'scheduling',
 		);
 
 		// If not a pro feature, it's always available
@@ -185,12 +210,99 @@ class ProManager {
 	 * @return bool True if pro license is valid
 	 */
 	private static function check_pro_license() {
-		// Placeholder for future pro license checking
-		// Could check for:
-		// - License key in options
-		// - Pro plugin activation
-		// - Remote license validation
-		return false;
+		// Get license key from settings.
+		$license_key = trim( (string) get_option( 'eventlayer_license_key', '' ) );
+
+		// No key saved, not active.
+		if ( '' === $license_key ) {
+			return false;
+		}
+
+		// Temporary local rule: allow non-empty key to pass when local mode is enabled.
+		// Enable via define('EVENTLAYER_DEV_LICENSE_PASS', true); in wp-config.php or filter below.
+		$local_mode = apply_filters(
+			'eventlayer_license_local_mode',
+			defined( 'EVENTLAYER_DEV_LICENSE_PASS' ) ? (bool) EVENTLAYER_DEV_LICENSE_PASS : false,
+			$license_key
+		);
+		if ( $local_mode ) {
+			$valid = true;
+			$data  = array( 'mode' => 'local' );
+			update_option(
+				'eventlayer_license_cache',
+				array(
+					'valid'      => $valid,
+					'checked_at' => time(),
+					'data'       => $data,
+				),
+				false
+			);
+			do_action( 'eventlayer_license_checked', $valid, $data );
+			return true;
+		}
+
+		// Use cached result if recent to avoid frequent network calls.
+		$cache = get_option( 'eventlayer_license_cache', array() );
+		if ( is_array( $cache ) && isset( $cache['valid'], $cache['checked_at'] ) ) {
+			$age = time() - (int) $cache['checked_at'];
+			if ( $age < DAY_IN_SECONDS ) {
+				return (bool) $cache['valid'];
+			}
+		}
+
+		// Build validation request.
+		$endpoint = apply_filters( 'eventlayer_license_validation_endpoint', self::VALIDATION_ENDPOINT );
+		$args     = array(
+			'timeout' => 8,
+			'headers' => array( 'Accept' => 'application/json' ),
+			'body'    => array(
+				'license_key' => $license_key,
+				'site_url'    => home_url(),
+				'plugin'      => 'eventlayer',
+				'version'     => \EventLayer\Plugin::get_instance()->get_version(),
+			),
+		);
+		$args = apply_filters( 'eventlayer_license_request_args', $args, $license_key );
+
+		// Remote validation.
+		$response = wp_remote_post( $endpoint, $args );
+
+		$valid = false;
+		$data  = array();
+
+		if ( is_wp_error( $response ) ) {
+			// Fall back to previous cached validity if available.
+			if ( is_array( $cache ) && isset( $cache['valid'] ) ) {
+				return (bool) $cache['valid'];
+			}
+			return false;
+		}
+
+		$code = (int) wp_remote_retrieve_response_code( $response );
+		$body = (string) wp_remote_retrieve_body( $response );
+
+		if ( $code >= 200 && $code < 300 ) {
+			$json = json_decode( $body, true );
+			if ( is_array( $json ) && array_key_exists( 'valid', $json ) ) {
+				$valid = (bool) $json['valid'];
+				$data  = $json;
+			}
+		}
+
+		// Cache the result for a day.
+		update_option(
+			'eventlayer_license_cache',
+			array(
+				'valid'      => $valid,
+				'checked_at' => time(),
+				'data'       => $data,
+			),
+			false
+		);
+
+		do_action( 'eventlayer_license_checked', $valid, $data );
+
+		return $valid;
 	}
 
 	/**

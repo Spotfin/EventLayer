@@ -36,23 +36,16 @@
         // Parameters Repeater
         var parameterIndex = $('#parameters-tbody .parameter-row').length;
 
-        // Add Parameter
+        // Add Parameter - clone server-rendered template to ensure options reflect filters
         $('#add-parameter').on('click', function () {
-            var newRow = $('<tr class="parameter-row">' +
-                '<td><input type="text" name="parameters[' + parameterIndex + '][name]" value="" placeholder="parameter_name" class="regular-text" /></td>' +
-                '<td><input type="text" name="parameters[' + parameterIndex + '][default_value]" value="" placeholder="Default value" class="regular-text" /></td>' +
-                '<td>' +
-                '<select name="parameters[' + parameterIndex + '][target_type]">' +
-                '<option value="static">Static Value</option>' +
-                '<option value="element_text">Element Text</option>' +
-                '<option value="element_attribute">Element Attribute</option>' +
-                '<option value="url_parameter">URL Parameter</option>' +
-                '</select>' +
-                '</td>' +
-                '<td><input type="text" name="parameters[' + parameterIndex + '][target_selector]" value="" placeholder="CSS selector or attribute name" class="regular-text" /></td>' +
-                '<td><button type="button" class="button remove-parameter">Remove</button></td>' +
-                '</tr>');
-            $('#parameters-tbody').append(newRow);
+            var $tpl = $('#parameter-template-row').clone().removeAttr('id');
+            $tpl.find('input, select').each(function () {
+                var name = $(this).attr('name');
+                if (name) {
+                    $(this).attr('name', name.replace('__NAME__', 'parameters[' + parameterIndex + ']'));
+                }
+            });
+            $('#parameters-tbody').append($tpl.show());
             parameterIndex++;
         });
 

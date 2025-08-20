@@ -105,31 +105,64 @@ class EventRulesController extends BaseController {
 			)
 		);
 
-		// Add settings section
-		add_settings_section(
-			'eventlayer_general_settings',
-			__( 'General Settings', 'eventlayer' ),
-			null,
-			'eventlayer_settings'
-		);
+		   // Add settings section
+		   add_settings_section(
+			   'eventlayer_general_settings',
+			   __( 'General Settings', 'eventlayer' ),
+			   null,
+			   'eventlayer_settings'
+		   );
 
-		// Add settings fields
-		add_settings_field(
-			'eventlayer_debug_mode',
-			__( 'Debug Mode', 'eventlayer' ),
-			array( $this, 'debug_mode_field_callback' ),
-			'eventlayer_settings',
-			'eventlayer_general_settings'
-		);
+		   // Add settings fields
+		   add_settings_field(
+			   'eventlayer_debug_mode',
+			   __( 'Debug Mode', 'eventlayer' ),
+			   array( $this, 'debug_mode_field_callback' ),
+			   'eventlayer_settings',
+			   'eventlayer_general_settings'
+		   );
 
-		add_settings_field(
-			'eventlayer_auto_pageview',
-			__( 'Auto Page View Tracking', 'eventlayer' ),
-			array( $this, 'auto_pageview_field_callback' ),
-			'eventlayer_settings',
-			'eventlayer_general_settings'
-		);
-	}
+		   add_settings_field(
+			   'eventlayer_auto_pageview',
+			   __( 'Auto Page View Tracking', 'eventlayer' ),
+			   array( $this, 'auto_pageview_field_callback' ),
+			   'eventlayer_settings',
+			   'eventlayer_general_settings'
+		   );
+
+		   // Register license key option
+		   register_setting(
+			   'eventlayer_settings',
+			   'eventlayer_license_key',
+			   array(
+				   'type'              => 'string',
+				   'default'           => '',
+				   'sanitize_callback' => 'sanitize_text_field',
+			   )
+		   );
+
+		   // Add license key field
+		   add_settings_field(
+			   'eventlayer_license_key',
+			   __( 'Pro License Key', 'eventlayer' ),
+			   array( $this, 'license_key_field_callback' ),
+			   'eventlayer_settings',
+			   'eventlayer_general_settings'
+		   );
+
+	   }
+
+	   /**
+		* License key field callback.
+		*
+		* @return void
+		*/
+	   public function license_key_field_callback() {
+		   $value = get_option( 'eventlayer_license_key', '' );
+		   echo '<input type="text" name="eventlayer_license_key" value="' . esc_attr( $value ) . '" class="regular-text" autocomplete="off" />';
+		   echo '<p class="description">' . esc_html__( 'Enter your EventLayer Pro license key to enable Pro features and updates.', 'eventlayer' ) . '</p>';
+	   }
+
 
 	/**
 	 * Sanitize checkbox input.

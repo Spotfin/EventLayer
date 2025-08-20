@@ -99,14 +99,16 @@ class ScriptInjector {
 			$multiple_toggle  = (bool) get_post_meta( $post->ID, '_multiple_toggle', true );
 			$child_selectors  = get_post_meta( $post->ID, '_child_selectors', true );
 			$parameters       = get_post_meta( $post->ID, '_parameters', true );
+			$schedule_start   = get_post_meta( $post->ID, '_schedule_start', true );
+			$schedule_end     = get_post_meta( $post->ID, '_schedule_end', true );
 
 			// Skip if essential data is missing
 			if ( empty( $event_type ) || empty( $parent_selector ) ) {
 				continue;
 			}
 
-			// Check if this rule should be active on current page
-			if ( ! $this->should_rule_be_active( $site_location ) ) {
+			// Check if this rule should be active on current page and within schedule
+			if ( ! $this->should_rule_be_active( $site_location ) || ! $this->is_within_schedule( $schedule_start, $schedule_end ) ) {
 				continue;
 			}
 
@@ -126,6 +128,8 @@ class ScriptInjector {
 				'multipleToggle'  => $multiple_toggle,
 				'childSelectors'  => array_map( 'sanitize_text_field', $child_selectors ),
 				'parameters'      => $this->sanitize_parameters( $parameters ),
+				'start'           => $schedule_start,
+				'end'             => $schedule_end,
 			);
 
 			$rules[] = $rule;
@@ -181,5 +185,36 @@ class ScriptInjector {
 		}
 
 		return $sanitized;
+	}
+
+	/**
+	 * Check if current time is within schedule window.
+	 * Accepts HTML5 datetime-local values (YYYY-MM-DDTHH:MM) in site timezone.
+	 *
+	 * @param string $start Start datetime-local value.
+	 * @param string $end   End datetime-local value.
+	 * @return bool
+	 */
+	private function is_within_schedule( $start, $end ) {
+		$now = current_time( 'timestamp' ); // site timezone
+
+		$start_ok = true;
+		$end_ok   = true;
+
+		if ( ! empty( $start ) ) {
+			$start_ts = strtotime( str_replace( 'T', ' ', $start ) );
+			if ( $start_ts && $now < $start_ts ) {
+				$start_ok = false;
+			}
+		}
+
+		if ( ! empty( $end ) ) {
+			$end_ts = strtotime( str_replace( 'T', ' ', $end ) );
+			if ( $end_ts && $now > $end_ts ) {
+				$end_ok = false;
+			}
+		}
+
+		return ( $start_ok && $end_ok );
 	}
 }
