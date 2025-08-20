@@ -21,7 +21,7 @@ class ProManager {
 	 *
 	 * @var bool
 	 */
-	private static $pro_features_enabled = true; // Change to false to enable gating
+	private static $pro_features_enabled = false; // Change to false to enable gating
 
 	/**
 	 * Whether the pro version is installed and active
