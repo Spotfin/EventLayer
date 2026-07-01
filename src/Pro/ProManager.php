@@ -196,8 +196,8 @@ class ProManager {
 			<h4 style="margin-top: 0; color: #d63638;">🔒 <?php echo esc_html( $title ); ?></h4>
 			<p style="margin-bottom: 10px;"><?php echo esc_html( $description ); ?></p>
 			<a href="<?php echo esc_url( self::get_upgrade_url() ); ?>" 
-			   class="button button-primary" 
-			   target="_blank">
+				class="button button-primary" 
+				target="_blank">
 				Upgrade to EventLayer Pro
 			</a>
 		</div>
@@ -262,7 +262,7 @@ class ProManager {
 				'version'     => \EventLayer\Plugin::get_instance()->get_version(),
 			),
 		);
-		$args = apply_filters( 'eventlayer_license_request_args', $args, $license_key );
+		$args     = apply_filters( 'eventlayer_license_request_args', $args, $license_key );
 
 		// Remote validation.
 		$response = wp_remote_post( $endpoint, $args );

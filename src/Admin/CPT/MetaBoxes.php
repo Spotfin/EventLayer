@@ -393,8 +393,8 @@ class MetaBoxes {
 		$target_types = apply_filters(
 			'eventlayer_parameter_target_types',
 			array(
-				'static'        => __( 'Static Value', 'eventlayer' ),
-				'element_text'  => __( 'Element Text', 'eventlayer' ),
+				'static'       => __( 'Static Value', 'eventlayer' ),
+				'element_text' => __( 'Element Text', 'eventlayer' ),
 			)
 		);
 		?>
@@ -521,5 +521,4 @@ class MetaBoxes {
 		</div>
 		<?php
 	}
-
 }
