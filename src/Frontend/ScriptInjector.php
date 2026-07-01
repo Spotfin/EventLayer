@@ -7,7 +7,10 @@
 
 namespace EventLayer\Frontend;
 
-use EventLayer\Admin\EventRulePostType;
+use EventLayer\Data\EventRuleRepository;
+use EventLayer\Model\EventRule;
+use EventLayer\Model\Parameter;
+use EventLayer\Model\SiteLocation;
 
 /**
  * Script injector for EventLayer frontend functionality.
@@ -16,6 +19,22 @@ use EventLayer\Admin\EventRulePostType;
  * @since 1.0.0
  */
 class ScriptInjector {
+
+	/**
+	 * Event rule repository.
+	 *
+	 * @var EventRuleRepository
+	 */
+	private EventRuleRepository $repository;
+
+	/**
+	 * Constructor.
+	 *
+	 * @param EventRuleRepository|null $repository Repository (optional, for testing).
+	 */
+	public function __construct( ?EventRuleRepository $repository = null ) {
+		$this->repository = $repository ?? new EventRuleRepository();
+	}
 
 	/**
 	 * Initialize the script injector.
@@ -66,132 +85,70 @@ class ScriptInjector {
 	}
 
 	/**
-	 * Get all published event rules with their meta data.
+	 * Get all active event rules as frontend config arrays.
 	 *
 	 * @return array
 	 */
 	private function get_event_rules() {
 		$rules = array();
 
-		// Query published event rules.
-		$posts = get_posts(
-			array(
-				'post_type'      => EventRulePostType::POST_TYPE,
-				'post_status'    => 'publish',
-				'posts_per_page' => -1,
-				'meta_query'     => array(
-					array(
-						'key'     => '_event_type',
-						'value'   => '',
-						'compare' => '!=',
-					),
-					array(
-						'key'     => '_parent_selector',
-						'value'   => '',
-						'compare' => '!=',
-					),
-				),
-			)
-		);
-
-		foreach ( $posts as $post ) {
-			// Get all meta data.
-			$event_type       = get_post_meta( $post->ID, '_event_type', true );
-			$site_location    = get_post_meta( $post->ID, '_site_location', true );
-			$trigger_delay    = absint( get_post_meta( $post->ID, '_trigger_delay', true ) );
-			$stop_propagation = (bool) get_post_meta( $post->ID, '_stop_propagation', true );
-			$parent_selector  = get_post_meta( $post->ID, '_parent_selector', true );
-			$multiple_toggle  = (bool) get_post_meta( $post->ID, '_multiple_toggle', true );
-			$child_selectors  = get_post_meta( $post->ID, '_child_selectors', true );
-			$parameters       = get_post_meta( $post->ID, '_parameters', true );
-			$schedule_start   = get_post_meta( $post->ID, '_schedule_start', true );
-			$schedule_end     = get_post_meta( $post->ID, '_schedule_end', true );
-
-			// Skip if essential data is missing.
-			if ( empty( $event_type ) || empty( $parent_selector ) ) {
-				continue;
-			}
-
+		foreach ( $this->repository->find_published() as $rule ) {
 			// Check if this rule should be active on current page and within schedule.
-			$is_active    = $this->should_rule_be_active( $site_location );
-			$is_scheduled = $this->is_within_schedule( $schedule_start, $schedule_end );
+			$is_active    = $this->should_rule_be_active( $rule->site_location );
+			$is_scheduled = $this->is_within_schedule( $rule->schedule_start, $rule->schedule_end );
 			if ( ! $is_active || ! $is_scheduled ) {
 				continue;
 			}
 
-			// Unserialize arrays.
-			$child_selectors = $child_selectors ? maybe_unserialize( $child_selectors ) : array();
-			$parameters      = $parameters ? maybe_unserialize( $parameters ) : array();
-
-			// Sanitize and prepare the rule.
-			$rule = array(
-				'id'              => $post->ID,
-				'title'           => sanitize_text_field( $post->post_title ),
-				'eventType'       => sanitize_text_field( $event_type ),
-				'siteLocation'    => sanitize_text_field( $site_location ),
-				'triggerDelay'    => $trigger_delay,
-				'stopPropagation' => $stop_propagation,
-				'parentSelector'  => sanitize_text_field( $parent_selector ),
-				'multipleToggle'  => $multiple_toggle,
-				'childSelectors'  => array_map( 'sanitize_text_field', $child_selectors ),
-				'parameters'      => $this->sanitize_parameters( $parameters ),
-				'start'           => $schedule_start,
-				'end'             => $schedule_end,
-			);
-
-			$rules[] = $rule;
+			$rules[] = $this->to_frontend_config( $rule );
 		}
 
 		return $rules;
 	}
 
 	/**
-	 * Check if a rule should be active on the current page.
+	 * Map an event rule to the camelCase config array pushed to JS.
 	 *
-	 * @param string $site_location Site location setting.
-	 * @return bool
+	 * @param EventRule $rule Event rule.
+	 * @return array
 	 */
-	private function should_rule_be_active( $site_location ) {
-		switch ( $site_location ) {
-			case 'homepage':
-				return is_front_page();
-
-			case 'specific_pages':
-				// For now, treat as all pages. Later we can add page selection meta.
-				return true;
-
-			case 'all_pages':
-			default:
-				return true;
-		}
+	private function to_frontend_config( EventRule $rule ): array {
+		return array(
+			'id'              => $rule->id,
+			'title'           => $rule->title,
+			'eventType'       => $rule->event_type,
+			'siteLocation'    => $rule->site_location->value,
+			'triggerDelay'    => null === $rule->trigger_delay ? 0 : $rule->trigger_delay,
+			'stopPropagation' => $rule->stop_propagation,
+			'parentSelector'  => $rule->parent_selector,
+			'multipleToggle'  => $rule->multiple_toggle,
+			'childSelectors'  => $rule->child_selectors,
+			'parameters'      => array_map(
+				static fn ( Parameter $parameter ): array => array(
+					'name'           => $parameter->name,
+					'defaultValue'   => $parameter->default_value,
+					'targetType'     => $parameter->target_type->value,
+					'targetSelector' => $parameter->target_selector,
+				),
+				$rule->parameters
+			),
+			'start'           => $rule->schedule_start,
+			'end'             => $rule->schedule_end,
+		);
 	}
 
 	/**
-	 * Sanitize parameters array.
+	 * Check if a rule should be active on the current page.
 	 *
-	 * @param array $parameters Raw parameters array.
-	 * @return array
+	 * @param SiteLocation $site_location Site location setting.
+	 * @return bool
 	 */
-	private function sanitize_parameters( $parameters ) {
-		if ( ! is_array( $parameters ) ) {
-			return array();
-		}
-
-		$sanitized = array();
-		foreach ( $parameters as $param ) {
-			if ( ! is_array( $param ) || empty( $param['name'] ) ) {
-				continue;
-			}
-
-			$sanitized[] = array(
-				'name'           => sanitize_text_field( $param['name'] ),
-				'defaultValue'   => sanitize_text_field( $param['default_value'] ?? '' ),
-				'targetType'     => sanitize_text_field( $param['target_type'] ?? 'static' ),
-				'targetSelector' => sanitize_text_field( $param['target_selector'] ?? '' ),
-			);
-		}
-
-		return $sanitized;
+	private function should_rule_be_active( SiteLocation $site_location ) {
+		return match ( $site_location ) {
+			SiteLocation::Homepage => is_front_page(),
+			// Specific-pages targeting falls back to all pages until page selection meta exists.
+			SiteLocation::SpecificPages, SiteLocation::AllPages => true,
+		};
 	}
 
 	/**

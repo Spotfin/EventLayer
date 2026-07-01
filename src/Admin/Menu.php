@@ -7,6 +7,8 @@
 
 namespace EventLayer\Admin;
 
+use EventLayer\Data\EventRuleRepository;
+
 /**
  * Registers the EventLayer admin menu and renders its pages.
  *
@@ -14,6 +16,22 @@ namespace EventLayer\Admin;
  * @since 1.0.0
  */
 class Menu {
+
+	/**
+	 * Event rule repository.
+	 *
+	 * @var EventRuleRepository
+	 */
+	private EventRuleRepository $repository;
+
+	/**
+	 * Constructor.
+	 *
+	 * @param EventRuleRepository|null $repository Repository (optional, for testing).
+	 */
+	public function __construct( ?EventRuleRepository $repository = null ) {
+		$this->repository = $repository ?? new EventRuleRepository();
+	}
 
 	/**
 	 * Initialize the menu.
@@ -76,6 +94,7 @@ class Menu {
 	 * @return void
 	 */
 	public function admin_page() {
+		$recent_rules = $this->repository->find_recent( 5 );
 		include __DIR__ . '/Views/admin-main.php';
 	}
 

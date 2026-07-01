@@ -269,25 +269,31 @@ class EventRulePostType {
 	 * @return void
 	 */
 	public function custom_column_content( $column, $post_id ) {
+		if ( ! in_array( $column, array( 'event_type', 'location', 'selector' ), true ) ) {
+			return;
+		}
+
+		$rule = ( new \EventLayer\Data\EventRuleRepository() )->find( $post_id );
+		if ( null === $rule ) {
+			return;
+		}
+
 		switch ( $column ) {
 			case 'event_type':
-				$event_type = get_post_meta( $post_id, '_event_type', true );
-				echo esc_html( $event_type ? $event_type : '—' );
+				echo esc_html( '' !== $rule->event_type ? $rule->event_type : '—' );
 				break;
 
 			case 'location':
-				$location  = get_post_meta( $post_id, '_site_location', true );
 				$locations = array(
 					'all_pages'      => __( 'All Pages', 'eventlayer' ),
 					'specific_pages' => __( 'Specific Pages', 'eventlayer' ),
 					'homepage'       => __( 'Homepage Only', 'eventlayer' ),
 				);
-				echo esc_html( $locations[ $location ] ?? $location );
+				echo esc_html( $locations[ $rule->site_location->value ] );
 				break;
 
 			case 'selector':
-				$selector = get_post_meta( $post_id, '_parent_selector', true );
-				echo esc_html( $selector ? wp_trim_words( $selector, 5 ) : '—' );
+				echo esc_html( '' !== $rule->parent_selector ? wp_trim_words( $rule->parent_selector, 5 ) : '—' );
 				break;
 		}
 	}

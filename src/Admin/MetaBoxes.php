@@ -7,6 +7,9 @@
 
 namespace EventLayer\Admin;
 
+use EventLayer\Data\EventRuleRepository;
+use EventLayer\Model\Parameter;
+
 /**
  * Meta boxes for Event Rule custom post type.
  *
@@ -14,6 +17,22 @@ namespace EventLayer\Admin;
  * @since 1.0.0
  */
 class MetaBoxes {
+
+	/**
+	 * Event rule repository.
+	 *
+	 * @var EventRuleRepository
+	 */
+	private EventRuleRepository $repository;
+
+	/**
+	 * Constructor.
+	 *
+	 * @param EventRuleRepository|null $repository Repository (optional, for testing).
+	 */
+	public function __construct( ?EventRuleRepository $repository = null ) {
+		$this->repository = $repository ?? new EventRuleRepository();
+	}
 
 	/**
 	 * Initialize meta boxes.
@@ -114,18 +133,16 @@ class MetaBoxes {
 		wp_nonce_field( 'eventlayer_save_meta', 'eventlayer_meta_nonce' );
 
 		// Get current values.
-		$event_type       = get_post_meta( $post->ID, '_event_type', true );
-		$site_location    = get_post_meta( $post->ID, '_site_location', true );
-		$site_location    = $site_location ? $site_location : 'all_pages';
-		$trigger_delay    = get_post_meta( $post->ID, '_trigger_delay', true );
-		$stop_propagation = get_post_meta( $post->ID, '_stop_propagation', true );
-		$start            = get_post_meta( $post->ID, '_schedule_start', true );
-		$end              = get_post_meta( $post->ID, '_schedule_end', true );
+		$rule             = $this->repository->find( $post->ID );
+		$event_type       = $rule->event_type;
+		$site_location    = $rule->site_location->value;
+		$trigger_delay    = null === $rule->trigger_delay ? '' : $rule->trigger_delay;
+		$stop_propagation = $rule->stop_propagation ? 1 : 0;
 
-		$start_date = $start ? substr( $start, 0, 10 ) : '';
-		$start_time = $start ? substr( $start, 11, 5 ) : '';
-		$end_date   = $end ? substr( $end, 0, 10 ) : '';
-		$end_time   = $end ? substr( $end, 11, 5 ) : '';
+		$start_date = $rule->schedule_start ? substr( $rule->schedule_start, 0, 10 ) : '';
+		$start_time = $rule->schedule_start ? substr( $rule->schedule_start, 11, 5 ) : '';
+		$end_date   = $rule->schedule_end ? substr( $rule->schedule_end, 0, 10 ) : '';
+		$end_time   = $rule->schedule_end ? substr( $rule->schedule_end, 11, 5 ) : '';
 
 		include __DIR__ . '/Views/metabox-event-settings.php';
 	}
@@ -138,10 +155,10 @@ class MetaBoxes {
 	 */
 	public function trigger_elements_callback( $post ) {
 		// Get current values.
-		$parent_selector = get_post_meta( $post->ID, '_parent_selector', true );
-		$multiple_toggle = get_post_meta( $post->ID, '_multiple_toggle', true );
-		$child_selectors = get_post_meta( $post->ID, '_child_selectors', true );
-		$child_selectors = $child_selectors ? maybe_unserialize( $child_selectors ) : array();
+		$rule            = $this->repository->find( $post->ID );
+		$parent_selector = $rule->parent_selector;
+		$multiple_toggle = $rule->multiple_toggle ? 1 : 0;
+		$child_selectors = $rule->child_selectors;
 
 		$parent_selector_placeholder = __( 'e.g., .cta-button, #header-nav, [data-track]', 'eventlayer' );
 		include __DIR__ . '/Views/metabox-trigger-elements.php';
@@ -154,9 +171,12 @@ class MetaBoxes {
 	 * @return void
 	 */
 	public function parameters_callback( $post ) {
-		// Get current values.
-		$parameters = get_post_meta( $post->ID, '_parameters', true );
-		$parameters = $parameters ? maybe_unserialize( $parameters ) : array();
+		// Get current values (legacy array shape expected by the view).
+		$rule       = $this->repository->find( $post->ID );
+		$parameters = array_map(
+			static fn ( Parameter $parameter ): array => $parameter->to_meta(),
+			$rule->parameters
+		);
 
 		$target_selector_placeholder = __( 'CSS selector or attribute name', 'eventlayer' );
 

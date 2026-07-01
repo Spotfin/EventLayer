@@ -86,36 +86,26 @@ $eventlayer_intro_text = __(
 				</p>
 
 				<h3><?php esc_html_e( 'Recent Event Rules', 'eventlayer' ); ?></h3>
-				<?php
-				$recent_rules = get_posts(
-					array(
-						'post_type'      => 'event_rule',
-						'posts_per_page' => 5,
-						'post_status'    => array( 'publish', 'draft' ),
-					)
-				);
-
-				if ( $recent_rules ) :
-					?>
+				<?php if ( $recent_rules ) : ?>
 					<ul>
 						<?php foreach ( $recent_rules as $rule ) : ?>
 							<?php
-							$rule_event_type = get_post_meta( $rule->ID, '_event_type', true );
+							$rule_event_type = $rule->event_type;
 							if ( ! $rule_event_type ) {
 								$rule_event_type = __( 'No event type', 'eventlayer' );
 							}
 
-							$rule_title = $rule->post_title;
+							$rule_title = $rule->title;
 							if ( ! $rule_title ) {
 								$rule_title = __( '(no title)', 'eventlayer' );
 							}
 							?>
 							<li>
-								<a href="<?php echo esc_url( get_edit_post_link( $rule->ID ) ); ?>">
+								<a href="<?php echo esc_url( get_edit_post_link( $rule->id ) ); ?>">
 									<?php echo esc_html( $rule_title ); ?>
 								</a>
 								- <?php echo esc_html( $rule_event_type ); ?>
-								<small>(<?php echo esc_html( $rule->post_status ); ?>)</small>
+								<small>(<?php echo esc_html( $rule->status ); ?>)</small>
 							</li>
 						<?php endforeach; ?>
 					</ul>
