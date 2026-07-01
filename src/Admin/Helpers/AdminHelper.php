@@ -1,4 +1,9 @@
 <?php
+/**
+ * Admin helper utilities for EventLayer.
+ *
+ * @package EventLayer
+ */
 
 namespace EventLayer\Admin\Helpers;
 

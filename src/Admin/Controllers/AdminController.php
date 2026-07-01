@@ -1,4 +1,9 @@
 <?php
+/**
+ * Admin controller: menus, pages, settings, and notices.
+ *
+ * @package EventLayer
+ */
 
 namespace EventLayer\Admin\Controllers;
 

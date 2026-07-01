@@ -1,4 +1,9 @@
 <?php
+/**
+ * Meta boxes for the Event Rule custom post type.
+ *
+ * @package EventLayer
+ */
 
 namespace EventLayer\Admin\CPT;
 

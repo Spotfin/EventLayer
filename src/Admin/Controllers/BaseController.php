@@ -1,4 +1,9 @@
 <?php
+/**
+ * Base controller for EventLayer admin functionality.
+ *
+ * @package EventLayer
+ */
 
 namespace EventLayer\Admin\Controllers;
 

@@ -1,4 +1,9 @@
 <?php
+/**
+ * Frontend script injector for EventLayer event rules.
+ *
+ * @package EventLayer
+ */
 
 namespace EventLayer\Public;
 

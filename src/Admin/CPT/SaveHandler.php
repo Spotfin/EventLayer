@@ -1,4 +1,9 @@
 <?php
+/**
+ * Save handler for Event Rule post meta.
+ *
+ * @package EventLayer
+ */
 
 namespace EventLayer\Admin\CPT;
 

@@ -1,4 +1,9 @@
 <?php
+/**
+ * Event Rule custom post type registration and admin columns.
+ *
+ * @package EventLayer
+ */
 
 namespace EventLayer\Admin\CPT;
 

@@ -1,4 +1,9 @@
 <?php
+/**
+ * Main plugin bootstrap class for EventLayer.
+ *
+ * @package EventLayer
+ */
 
 namespace EventLayer;
 

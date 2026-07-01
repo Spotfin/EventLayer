@@ -1,4 +1,9 @@
 <?php
+/**
+ * Base test case for EventLayer unit tests.
+ *
+ * @package EventLayer
+ */
 
 namespace EventLayer\Tests;
 
