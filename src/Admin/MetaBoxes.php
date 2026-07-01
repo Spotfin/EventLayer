@@ -60,69 +60,6 @@ class MetaBoxes {
 	}
 
 	/**
-	 * Schedule meta box callback (Pro feature).
-	 *
-	 * @param \WP_Post $post Current post object.
-	 * @return void
-	 */
-	public function schedule_callback( $post ) {
-		$start = get_post_meta( $post->ID, '_schedule_start', true );
-		$end   = get_post_meta( $post->ID, '_schedule_end', true );
-
-		// Split into date and time parts for UI.
-		$start_date = $start ? substr( $start, 0, 10 ) : '';
-		$start_time = $start ? substr( $start, 11, 5 ) : '';
-		$end_date   = $end ? substr( $end, 0, 10 ) : '';
-		$end_time   = $end ? substr( $end, 11, 5 ) : '';
-
-		if ( ! \EventLayer\Pro\ProManager::has_feature( 'scheduling' ) ) {
-			// Show gate and keep hidden fields so saves don't erase values inadvertently.
-			\EventLayer\Pro\ProManager::render_feature_gate(
-				'scheduling',
-				__( 'Scheduling', 'eventlayer' ),
-				__( 'Schedule event rules to start and stop automatically with EventLayer Pro.', 'eventlayer' )
-			);
-			// Preserve values via hidden fields.
-			echo '<input type="hidden" name="schedule_start_date" value="' . esc_attr( $start_date ) . '" />';
-			echo '<input type="hidden" name="schedule_start_time" value="' . esc_attr( $start_time ) . '" />';
-			echo '<input type="hidden" name="schedule_end_date" value="' . esc_attr( $end_date ) . '" />';
-			echo '<input type="hidden" name="schedule_end_time" value="' . esc_attr( $end_time ) . '" />';
-			return;
-		}
-
-		echo '<p><strong>' . esc_html__( 'Start', 'eventlayer' ) . '</strong><br/>';
-		echo '<label for="schedule_start_date" class="screen-reader-text">'
-			. esc_html__( 'Start Date', 'eventlayer' ) . '</label>';
-		echo '<input type="date" id="schedule_start_date" name="schedule_start_date" value="'
-			. esc_attr( $start_date ) . '" class="small-text" style="width: 100%;" />';
-		echo '<br/>';
-		echo '<label for="schedule_start_time" class="screen-reader-text">'
-			. esc_html__( 'Start Time', 'eventlayer' ) . '</label>';
-		echo '<input type="time" id="schedule_start_time" name="schedule_start_time" value="'
-			. esc_attr( $start_time ) . '" class="small-text" style="width: 100%;" />';
-		echo '</p>';
-
-		echo '<p><strong>' . esc_html__( 'End', 'eventlayer' ) . '</strong><br/>';
-		echo '<label for="schedule_end_date" class="screen-reader-text">'
-			. esc_html__( 'End Date', 'eventlayer' ) . '</label>';
-		echo '<input type="date" id="schedule_end_date" name="schedule_end_date" value="'
-			. esc_attr( $end_date ) . '" class="small-text" style="width: 100%;" />';
-		echo '<br/>';
-		echo '<label for="schedule_end_time" class="screen-reader-text">'
-			. esc_html__( 'End Time', 'eventlayer' ) . '</label>';
-		echo '<input type="time" id="schedule_end_time" name="schedule_end_time" value="'
-			. esc_attr( $end_time ) . '" class="small-text" style="width: 100%;" />';
-		echo '</p>';
-
-		echo '<p class="description">';
-		esc_html_e(
-			'If set, the rule will only be active between the start and end times (site timezone). Leave blank for always on.',
-			'eventlayer'
-		);
-		echo '</p>';
-	}
-
-	/**
 	 * Enqueue admin scripts and styles.
 	 *
 	 * @param string $hook Current admin page hook.
