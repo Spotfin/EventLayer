@@ -7,13 +7,31 @@
 
 namespace EventLayer\Admin;
 
+use EventLayer\Data\EventRuleRepository;
+use EventLayer\Gating\Gating;
+
 /**
  * Renders rule-limit notices and disables rule creation UI when gated.
  *
- * @package EventLayer\Admin
  * @since 1.0.0
  */
 class GatingUi {
+
+	/**
+	 * Event rule repository.
+	 *
+	 * @var EventRuleRepository
+	 */
+	private EventRuleRepository $repository;
+
+	/**
+	 * Constructor.
+	 *
+	 * @param EventRuleRepository|null $repository Repository (optional, for testing).
+	 */
+	public function __construct( ?EventRuleRepository $repository = null ) {
+		$this->repository = $repository ?? new EventRuleRepository();
+	}
 
 	/**
 	 * Initialize the gating UI.
@@ -34,17 +52,17 @@ class GatingUi {
 	public function maybe_show_rule_limit_notice() {
 		// Only show on event rule pages.
 		$screen = get_current_screen();
-		if ( ! $screen || 'event_rule' !== $screen->post_type ) {
+		if ( ! $screen || EventRulePostType::POST_TYPE !== $screen->post_type ) {
 			return;
 		}
 
-		// Don't show if pro features are enabled.
-		if ( ! \EventLayer\Pro\ProManager::should_enforce_limits() ) {
+		// No notice when rules are unlimited.
+		$max_rules = Gating::provider()->get_max_rules();
+		if ( 0 === $max_rules ) {
 			return;
 		}
 
-		$current_count = \EventLayer\Pro\ProManager::get_current_rule_count();
-		$max_rules     = \EventLayer\Pro\ProManager::get_max_rules();
+		$current_count = $this->repository->count_published();
 
 		// Show warning when approaching limit.
 		if ( $current_count >= $max_rules - 1 && $current_count < $max_rules ) {
@@ -63,7 +81,7 @@ class GatingUi {
 						$max_rules - $current_count
 					);
 					?>
-					<a href="<?php echo esc_url( \EventLayer\Pro\ProManager::get_upgrade_url() ); ?>" target="_blank">
+					<a href="<?php echo esc_url( Gating::provider()->get_upgrade_url() ); ?>" target="_blank">
 						<?php esc_html_e( 'Upgrade to EventLayer Pro for unlimited rules', 'eventlayer' ); ?>
 					</a>
 				</p>
@@ -84,7 +102,7 @@ class GatingUi {
 						$max_rules
 					);
 					?>
-					<a href="<?php echo esc_url( \EventLayer\Pro\ProManager::get_upgrade_url() ); ?>" target="_blank">
+					<a href="<?php echo esc_url( Gating::provider()->get_upgrade_url() ); ?>" target="_blank">
 						<?php esc_html_e( 'Upgrade to EventLayer Pro for unlimited rules', 'eventlayer' ); ?>
 					</a>
 				</p>
@@ -99,7 +117,7 @@ class GatingUi {
 	 * @return void
 	 */
 	public function maybe_disable_add_new_button() {
-		if ( ! \EventLayer\Pro\ProManager::can_create_rule() ) {
+		if ( ! $this->can_create_rule() ) {
 			add_action( 'admin_head', array( $this, 'hide_add_new_button' ) );
 		}
 	}
@@ -111,7 +129,7 @@ class GatingUi {
 	 */
 	public function hide_add_new_button() {
 		$screen = get_current_screen();
-		if ( $screen && 'event_rule' === $screen->post_type ) {
+		if ( $screen && EventRulePostType::POST_TYPE === $screen->post_type ) {
 			?>
 			<style>
 				.page-title-action,
@@ -132,15 +150,31 @@ class GatingUi {
 	 * @return array
 	 */
 	public function maybe_limit_row_actions( $actions, $post ) {
-		if ( 'event_rule' !== $post->post_type ) {
+		if ( EventRulePostType::POST_TYPE !== $post->post_type ) {
 			return $actions;
 		}
 
-		if ( ! \EventLayer\Pro\ProManager::can_create_rule() ) {
+		if ( ! $this->can_create_rule() ) {
 			// Remove actions that create new posts.
 			unset( $actions['inline'], $actions['duplicate'] );
 		}
 
 		return $actions;
+	}
+
+	/**
+	 * Whether another rule can be created under the current limit.
+	 *
+	 * @return bool
+	 */
+	private function can_create_rule(): bool {
+		$max_rules = Gating::provider()->get_max_rules();
+
+		// If unlimited (0), always allow.
+		if ( 0 === $max_rules ) {
+			return true;
+		}
+
+		return $this->repository->count_published() < $max_rules;
 	}
 }

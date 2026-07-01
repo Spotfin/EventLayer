@@ -95,9 +95,6 @@ class Plugin {
 	 * @return void
 	 */
 	public function init() {
-		// Initialize Pro Manager.
-		\EventLayer\Pro\ProManager::init();
-
 		// Initialize plugin components.
 		$this->init_admin();
 		$this->init_public();
@@ -131,9 +128,6 @@ class Plugin {
 
 			$gating_ui = new \EventLayer\Admin\GatingUi();
 			$gating_ui->init();
-
-			// Initialize development helper.
-			\EventLayer\Support\DevHelper::init();
 		}
 	}
 

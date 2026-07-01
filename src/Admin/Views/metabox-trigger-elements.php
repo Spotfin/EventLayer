@@ -31,14 +31,15 @@
 			</p>
 		</td>
 	</tr>
+	<?php if ( \EventLayer\Gating\Gating::provider()->has_feature( 'multiple_toggle' ) ) : ?>
 	<tr>
 		<th scope="row"><?php esc_html_e( 'Multiple Elements', 'eventlayer' ); ?></th>
 		<td>
 			<label>
-				<input type="checkbox" 
-						id="multiple_toggle" 
-						name="multiple_toggle" 
-						value="1" 
+				<input type="checkbox"
+						id="multiple_toggle"
+						name="multiple_toggle"
+						value="1"
 						<?php checked( $multiple_toggle, 1 ); ?> />
 				<?php esc_html_e( 'Track multiple instances of this selector', 'eventlayer' ); ?>
 			</label>
@@ -49,6 +50,33 @@
 			</p>
 		</td>
 	</tr>
+	<?php else : ?>
+	<tr>
+		<th scope="row"><?php esc_html_e( 'Multiple Elements', 'eventlayer' ); ?></th>
+		<td>
+			<p class="description">
+				<?php
+				esc_html_e(
+					'Events fire on every element matching the selector. Upgrade to Pro for per-instance control.',
+					'eventlayer'
+				);
+				?>
+			</p>
+			<?php
+			\EventLayer\Admin\FeatureGate::render(
+				'multiple_toggle',
+				__( 'Per-Instance Element Control', 'eventlayer' ),
+				__( 'Fine-tune how individual matching elements are tracked with EventLayer Pro.', 'eventlayer' )
+			);
+			// Preserve the stored value so a Pro downgrade does not erase it.
+			if ( $multiple_toggle ) :
+				?>
+				<input type="hidden" name="multiple_toggle" value="1" />
+			<?php endif; ?>
+		</td>
+	</tr>
+	<?php endif; ?>
+	<?php if ( \EventLayer\Gating\Gating::provider()->has_feature( 'child_selectors' ) ) : ?>
 	<tr>
 		<th scope="row">
 			<label><?php esc_html_e( 'Child Selectors', 'eventlayer' ); ?></label>
@@ -91,4 +119,36 @@
 			</p>
 		</td>
 	</tr>
+	<?php else : ?>
+	<tr>
+		<th scope="row">
+			<label><?php esc_html_e( 'Child Selectors', 'eventlayer' ); ?></label>
+		</th>
+		<td>
+			<?php
+			\EventLayer\Admin\FeatureGate::render(
+				'child_selectors',
+				__( 'Child Selectors', 'eventlayer' ),
+				__( 'Target nested elements with additional selectors using EventLayer Pro.', 'eventlayer' )
+			);
+			// Preserve stored values so a Pro downgrade does not erase them.
+			foreach ( $child_selectors as $selector ) :
+				?>
+				<input type="hidden" name="child_selectors[]" value="<?php echo esc_attr( $selector ); ?>" />
+			<?php endforeach; ?>
+		</td>
+	</tr>
+	<?php endif; ?>
+
+	<?php
+	/**
+	 * Extension point: add rows to the Trigger Elements meta box.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param \EventLayer\Model\EventRule $rule Current rule.
+	 * @param \WP_Post                    $post Current post.
+	 */
+	do_action( 'eventlayer_trigger_elements_fields', $rule, $post );
+	?>
 </table>

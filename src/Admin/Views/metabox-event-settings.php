@@ -27,7 +27,7 @@
 			</p>
 		</td>
 	</tr>
-	<?php if ( \EventLayer\Pro\ProManager::has_feature( 'site_location' ) ) : ?>
+	<?php if ( \EventLayer\Gating\Gating::provider()->has_feature( 'site_location' ) ) : ?>
 	<tr>
 		<th scope="row"><?php esc_html_e( 'Site Location', 'eventlayer' ); ?></th>
 		<td>
@@ -58,7 +58,7 @@
 		<th scope="row"><?php esc_html_e( 'Site Location', 'eventlayer' ); ?></th>
 		<td>
 			<?php
-			\EventLayer\Pro\ProManager::render_feature_gate(
+			\EventLayer\Admin\FeatureGate::render(
 				'site_location',
 				'Site Location Targeting',
 				'Target specific pages or sections of your site with EventLayer Pro.'
@@ -69,7 +69,7 @@
 	</tr>
 	<?php endif; ?>
 
-	<?php if ( \EventLayer\Pro\ProManager::has_feature( 'trigger_delay' ) ) : ?>
+	<?php if ( \EventLayer\Gating\Gating::provider()->has_feature( 'trigger_delay' ) ) : ?>
 	<tr>
 		<th scope="row">
 			<label for="trigger_delay"><?php esc_html_e( 'Event Trigger Delay', 'eventlayer' ); ?></label>
@@ -88,7 +88,7 @@
 		<th scope="row"><?php esc_html_e( 'Event Trigger Delay', 'eventlayer' ); ?></th>
 		<td>
 			<?php
-			\EventLayer\Pro\ProManager::render_feature_gate(
+			\EventLayer\Admin\FeatureGate::render(
 				'trigger_delay',
 				'Event Trigger Delay',
 				'Add delays to event triggers for better tracking accuracy with EventLayer Pro.'
@@ -99,7 +99,7 @@
 	</tr>
 	<?php endif; ?>
 
-	<?php if ( \EventLayer\Pro\ProManager::has_feature( 'stop_propagation' ) ) : ?>
+	<?php if ( \EventLayer\Gating\Gating::provider()->has_feature( 'stop_propagation' ) ) : ?>
 	<tr>
 		<th scope="row"><?php esc_html_e( 'Options', 'eventlayer' ); ?></th>
 		<td>
@@ -118,7 +118,7 @@
 		<th scope="row"><?php esc_html_e( 'Options', 'eventlayer' ); ?></th>
 		<td>
 			<?php
-			\EventLayer\Pro\ProManager::render_feature_gate(
+			\EventLayer\Admin\FeatureGate::render(
 				'stop_propagation',
 				'Event Propagation Control',
 				'Control event bubbling behavior with EventLayer Pro.'
@@ -129,7 +129,7 @@
 	</tr>
 	<?php endif; ?>
 
-	<?php $has_scheduling = \EventLayer\Pro\ProManager::has_feature( 'scheduling' ); ?>
+	<?php $has_scheduling = \EventLayer\Gating\Gating::provider()->has_feature( 'scheduling' ); ?>
 	<tr>
 		<th scope="row"><?php esc_html_e( 'Schedule', 'eventlayer' ); ?></th>
 		<td>
@@ -180,7 +180,7 @@
 				</p>
 			<?php else : ?>
 				<?php
-				\EventLayer\Pro\ProManager::render_feature_gate(
+				\EventLayer\Admin\FeatureGate::render(
 					'scheduling',
 					__( 'Scheduling', 'eventlayer' ),
 					__(
@@ -201,4 +201,15 @@
 		</td>
 	</tr>
 
+	<?php
+	/**
+	 * Extension point: add rows to the Event Settings meta box.
+	 *
+	 * @since 1.0.0
+	 *
+	 * @param \EventLayer\Model\EventRule $rule Current rule.
+	 * @param \WP_Post                    $post Current post.
+	 */
+	do_action( 'eventlayer_event_settings_fields', $rule, $post );
+	?>
 </table>

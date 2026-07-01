@@ -144,15 +144,11 @@
 			<?php esc_html_e( 'Add Parameter', 'eventlayer' ); ?>
 		</button>
 	</p>
-	<?php
-	$show_pro_hint = ! \EventLayer\Pro\ProManager::has_feature( 'element_attribute' )
-		|| ! \EventLayer\Pro\ProManager::has_feature( 'url_parameter' );
-	?>
-	<?php if ( $show_pro_hint ) : ?>
+	<?php if ( ! \EventLayer\Gating\Gating::provider()->has_feature( 'url_parameter' ) ) : ?>
 	<p class="description" style="margin-top: 8px; font-size: 12px; color: #666;">
 		🔒 <?php esc_html_e( 'Upgrade to Pro', 'eventlayer' ); ?>
-		<a href="<?php echo esc_url( \EventLayer\Pro\ProManager::get_upgrade_url() ); ?>" target="_blank">
-			<?php esc_html_e( 'for Element Attribute and URL Parameter extraction', 'eventlayer' ); ?>
+		<a href="<?php echo esc_url( \EventLayer\Gating\Gating::provider()->get_upgrade_url() ); ?>" target="_blank">
+			<?php esc_html_e( 'for URL Parameter extraction', 'eventlayer' ); ?>
 		</a>
 	</p>
 	<?php endif; ?>

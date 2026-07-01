@@ -296,19 +296,43 @@ Enable debug mode in **EventLayer → Settings** to see console output:
 
 ## 📚 Hooks & Filters
 
+This is the extension API used by EventLayer Pro; third-party plugins can use it too.
+
 ### Filters
 ```php
-// Add or modify parameter target types (used by Pro and third parties)
+// Replace the gating provider (must implement EventLayer\Gating\GatingProvider).
+$provider = apply_filters( 'eventlayer_gating_provider', $default_free_provider );
+
+// Add or modify parameter target types.
 $target_types = apply_filters(
 	'eventlayer_parameter_target_types',
 	array(
-		'static'       => __( 'Static Value', 'eventlayer' ),
-		'element_text' => __( 'Element Text', 'eventlayer' ),
+		'static'            => __( 'Static Value', 'eventlayer' ),
+		'element_text'      => __( 'Element Text', 'eventlayer' ),
+		'element_attribute' => __( 'Element Attribute', 'eventlayer' ),
 	)
 );
+
+// Whether a rule is injected on the current request.
+$active = apply_filters( 'eventlayer_rule_is_active', $active, $rule );
+
+// The settings object pushed to JS (eventLayerSettings).
+$settings = apply_filters( 'eventlayer_frontend_settings', $settings );
+
+// The full rule config pushed to JS (eventLayerConfig).
+$rules = apply_filters( 'eventlayer_frontend_config', $rules );
 ```
 
-Note: debug mode is controlled by the `eventlayer_debug_mode` *option* (Settings → Debug Mode), not a filter. Additional extension hooks will be added as part of the free/pro extension API.
+### Actions
+```php
+// Add rows to the Event Settings meta box.
+do_action( 'eventlayer_event_settings_fields', $rule, $post );
+
+// Add rows to the Trigger Elements meta box.
+do_action( 'eventlayer_trigger_elements_fields', $rule, $post );
+```
+
+Note: debug mode is controlled by the `eventlayer_debug_mode` *option* (Settings → Debug Mode), not a filter.
 
 ## 📄 License
 

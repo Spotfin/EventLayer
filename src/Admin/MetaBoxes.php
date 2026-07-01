@@ -102,18 +102,6 @@ class MetaBoxes {
 			true
 		);
 
-		// Pass Pro feature flags to JS so UI can gate options consistently.
-		wp_localize_script(
-			'eventlayer-admin',
-			'eventLayerAdminConfig',
-			array(
-				'features' => array(
-					'element_attribute' => \EventLayer\Pro\ProManager::has_feature( 'element_attribute' ),
-					'url_parameter'     => \EventLayer\Pro\ProManager::has_feature( 'url_parameter' ),
-				),
-			)
-		);
-
 		wp_enqueue_style(
 			'eventlayer-admin',
 			plugin_dir_url( __FILE__ ) . '../Assets/css/admin.css',
@@ -184,8 +172,9 @@ class MetaBoxes {
 		$target_types = apply_filters(
 			'eventlayer_parameter_target_types',
 			array(
-				'static'       => __( 'Static Value', 'eventlayer' ),
-				'element_text' => __( 'Element Text', 'eventlayer' ),
+				'static'            => __( 'Static Value', 'eventlayer' ),
+				'element_text'      => __( 'Element Text', 'eventlayer' ),
+				'element_attribute' => __( 'Element Attribute', 'eventlayer' ),
 			)
 		);
 		include __DIR__ . '/Views/metabox-parameters.php';

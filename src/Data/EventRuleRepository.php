@@ -95,6 +95,24 @@ class EventRuleRepository {
 	}
 
 	/**
+	 * Count published event rules.
+	 *
+	 * @return int
+	 */
+	public function count_published(): int {
+		$ids = get_posts(
+			array(
+				'post_type'      => EventRulePostType::POST_TYPE,
+				'post_status'    => 'publish',
+				'posts_per_page' => -1,
+				'fields'         => 'ids',
+			)
+		);
+
+		return count( $ids );
+	}
+
+	/**
 	 * Persist an event rule's meta.
 	 *
 	 * @param EventRule $rule    The rule to save.

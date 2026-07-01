@@ -63,15 +63,23 @@ class ScriptInjector {
 		// Get all published event rules.
 		$event_rules = $this->get_event_rules();
 
-		// Localize script with settings and event rules.
-		wp_localize_script(
-			'eventlayer-frontend',
-			'eventLayerSettings',
+		/**
+		 * Filter the frontend settings object.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param array $settings Settings pushed to JS as eventLayerSettings.
+		 */
+		$settings = apply_filters(
+			'eventlayer_frontend_settings',
 			array(
 				'debug'             => (bool) get_option( 'eventlayer_debug_mode', 0 ),
 				'autoTrackPageView' => (bool) get_option( 'eventlayer_auto_pageview', 1 ),
 			)
 		);
+
+		// Localize script with settings and event rules.
+		wp_localize_script( 'eventlayer-frontend', 'eventLayerSettings', $settings );
 
 		wp_localize_script( 'eventlayer-frontend', 'eventLayerConfig', $event_rules );
 
@@ -96,14 +104,30 @@ class ScriptInjector {
 			// Check if this rule should be active on current page and within schedule.
 			$is_active    = $this->should_rule_be_active( $rule->site_location );
 			$is_scheduled = $this->is_within_schedule( $rule->schedule_start, $rule->schedule_end );
-			if ( ! $is_active || ! $is_scheduled ) {
+
+			/**
+			 * Filter whether a rule is active on the current request.
+			 *
+			 * @since 1.0.0
+			 *
+			 * @param bool      $active Whether the rule will be injected.
+			 * @param EventRule $rule   The rule being evaluated.
+			 */
+			if ( ! apply_filters( 'eventlayer_rule_is_active', $is_active && $is_scheduled, $rule ) ) {
 				continue;
 			}
 
 			$rules[] = $this->to_frontend_config( $rule );
 		}
 
-		return $rules;
+		/**
+		 * Filter the full frontend rule config pushed to JS as eventLayerConfig.
+		 *
+		 * @since 1.0.0
+		 *
+		 * @param array $rules Array of camelCase rule config arrays.
+		 */
+		return apply_filters( 'eventlayer_frontend_config', $rules );
 	}
 
 	/**
