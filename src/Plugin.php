@@ -18,13 +18,6 @@ class Plugin {
 	const VERSION = '1.0.0';
 
 	/**
-	 * Minimum PHP version required.
-	 *
-	 * @var string
-	 */
-	const MIN_PHP_VERSION = '7.4';
-
-	/**
 	 * Plugin instance.
 	 *
 	 * @var Plugin
@@ -97,12 +90,6 @@ class Plugin {
 	 * @return void
 	 */
 	public function init() {
-		// Check PHP version
-		if ( ! $this->is_php_version_compatible() ) {
-			add_action( 'admin_notices', array( $this, 'php_version_notice' ) );
-			return;
-		}
-
 		// Initialize Pro Manager
 		\EventLayer\Pro\ProManager::init();
 
@@ -173,31 +160,6 @@ class Plugin {
 			false,
 			dirname( plugin_basename( $this->plugin_file ) ) . '/languages/'
 		);
-	}
-
-	/**
-	 * Check if PHP version is compatible.
-	 *
-	 * @return bool
-	 */
-	private function is_php_version_compatible() {
-		return version_compare( PHP_VERSION, self::MIN_PHP_VERSION, '>=' );
-	}
-
-	/**
-	 * Display PHP version notice.
-	 *
-	 * @return void
-	 */
-	public function php_version_notice() {
-		echo '<div class="notice notice-error"><p>';
-		printf(
-			/* translators: %1$s: required PHP version, %2$s: current PHP version */
-			esc_html__( 'EventLayer requires PHP version %1$s or higher. You are running version %2$s.', 'eventlayer' ),
-			esc_html( self::MIN_PHP_VERSION ),
-			esc_html( PHP_VERSION )
-		);
-		echo '</p></div>';
 	}
 
 	/**

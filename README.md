@@ -1,7 +1,7 @@
 # EventLayer
 
 [![WordPress Plugin](https://img.shields.io/badge/WordPress-Plugin-blue.svg)](https://wordpress.org/)
-[![PHP Version](https://img.shields.io/badge/PHP-7.4%2B-green.svg)](https://php.net/)
+[![PHP Version](https://img.shields.io/badge/PHP-8.1%2B-green.svg)](https://php.net/)
 [![License](https://img.shields.io/badge/License-GPL--2.0%2B-red.svg)](https://www.gnu.org/licenses/gpl-2.0.html)
 
 A modern WordPress plugin for managing custom GA4-style DataLayer events. EventLayer provides a user-friendly interface for creating sophisticated event tracking rules that automatically inject JavaScript for Google Tag Manager and Google Analytics 4 integration.
@@ -19,8 +19,8 @@ A modern WordPress plugin for managing custom GA4-style DataLayer events. EventL
 
 ## 📋 Requirements
 
-- WordPress 5.0 or higher
-- PHP 7.4 or higher
+- WordPress 6.4 or higher
+- PHP 8.1 or higher
 - Modern browser with JavaScript enabled
 
 ## 🔧 Installation
@@ -166,7 +166,7 @@ Access plugin settings via **EventLayer → Settings**:
 ## 🧪 Development
 
 ### Prerequisites
-- PHP 7.4+
+- PHP 8.1+
 - Composer
 - Node.js (for asset building)
 
@@ -263,7 +263,7 @@ EventLayer uses a modern architecture with:
 ### Coding Standards
 
 - Follow [WordPress Coding Standards](https://developer.wordpress.org/coding-standards/)
-- Use PHP 7.4+ features appropriately
+- Use PHP 8.1+ features appropriately (typed properties, promoted constructors, enums, readonly)
 - Maintain backwards compatibility
 - Add inline documentation for all public methods
 - Write unit tests for new functionality
