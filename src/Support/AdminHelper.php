@@ -5,12 +5,12 @@
  * @package EventLayer
  */
 
-namespace EventLayer\Admin\Helpers;
+namespace EventLayer\Support;
 
 /**
  * Helper functions for admin functionality.
  *
- * @package EventLayer\Admin\Helpers
+ * @package EventLayer\Support
  * @since 1.0.0
  */
 class AdminHelper {

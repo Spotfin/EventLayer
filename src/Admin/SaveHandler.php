@@ -5,12 +5,12 @@
  * @package EventLayer
  */
 
-namespace EventLayer\Admin\CPT;
+namespace EventLayer\Admin;
 
 /**
  * Save handler for Event Rule meta data.
  *
- * @package EventLayer\Admin\CPT
+ * @package EventLayer\Admin
  * @since 1.0.0
  */
 class SaveHandler {

@@ -111,23 +111,23 @@ class Plugin {
 	private function init_admin() {
 		if ( is_admin() ) {
 			// Initialize Custom Post Type.
-			$post_type = new \EventLayer\Admin\CPT\EventRulePostType();
+			$post_type = new \EventLayer\Admin\EventRulePostType();
 			$post_type->init();
 
 			// Initialize Meta Boxes.
-			$meta_boxes = new \EventLayer\Admin\CPT\MetaBoxes();
+			$meta_boxes = new \EventLayer\Admin\MetaBoxes();
 			$meta_boxes->init();
 
 			// Initialize Save Handler.
-			$save_handler = new \EventLayer\Admin\CPT\SaveHandler();
+			$save_handler = new \EventLayer\Admin\SaveHandler();
 			$save_handler->init();
 
 			// Initialize admin controller (for menu integration).
-			$admin_controller = new \EventLayer\Admin\Controllers\AdminController();
+			$admin_controller = new \EventLayer\Admin\AdminController();
 			$admin_controller->init();
 
 			// Initialize development helper.
-			\EventLayer\Admin\Helpers\DevHelper::init();
+			\EventLayer\Support\DevHelper::init();
 		}
 	}
 
@@ -149,7 +149,7 @@ class Plugin {
 	private function init_public() {
 		if ( ! is_admin() ) {
 			// Initialize script injector.
-			$script_injector = new \EventLayer\Public\ScriptInjector();
+			$script_injector = new \EventLayer\Frontend\ScriptInjector();
 			$script_injector->init();
 		}
 	}

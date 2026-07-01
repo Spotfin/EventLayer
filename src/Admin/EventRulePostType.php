@@ -5,12 +5,12 @@
  * @package EventLayer
  */
 
-namespace EventLayer\Admin\CPT;
+namespace EventLayer\Admin;
 
 /**
  * Event Rule Custom Post Type registration and management.
  *
- * @package EventLayer\Admin\CPT
+ * @package EventLayer\Admin
  * @since 1.0.0
  */
 class EventRulePostType {

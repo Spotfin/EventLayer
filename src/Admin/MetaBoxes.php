@@ -5,12 +5,12 @@
  * @package EventLayer
  */
 
-namespace EventLayer\Admin\CPT;
+namespace EventLayer\Admin;
 
 /**
  * Meta boxes for Event Rule custom post type.
  *
- * @package EventLayer\Admin\CPT
+ * @package EventLayer\Admin
  * @since 1.0.0
  */
 class MetaBoxes {
@@ -140,7 +140,7 @@ class MetaBoxes {
 
 		wp_enqueue_script(
 			'eventlayer-admin',
-			plugin_dir_url( __FILE__ ) . '../../Assets/js/admin.js',
+			plugin_dir_url( __FILE__ ) . '../Assets/js/admin.js',
 			array( 'jquery' ),
 			'1.0.0',
 			true
@@ -160,7 +160,7 @@ class MetaBoxes {
 
 		wp_enqueue_style(
 			'eventlayer-admin',
-			plugin_dir_url( __FILE__ ) . '../../Assets/css/admin.css',
+			plugin_dir_url( __FILE__ ) . '../Assets/css/admin.css',
 			array(),
 			'1.0.0'
 		);

@@ -5,12 +5,12 @@
  * @package EventLayer
  */
 
-namespace EventLayer\Admin\Controllers;
+namespace EventLayer\Admin;
 
 /**
  * Base controller for admin functionality.
  *
- * @package EventLayer\Admin\Controllers
+ * @package EventLayer\Admin
  * @since 1.0.0
  */
 abstract class BaseController {

@@ -5,14 +5,14 @@
  * @package EventLayer
  */
 
-namespace EventLayer\Public;
+namespace EventLayer\Frontend;
 
-use EventLayer\Admin\CPT\EventRulePostType;
+use EventLayer\Admin\EventRulePostType;
 
 /**
  * Script injector for EventLayer frontend functionality.
  *
- * @package EventLayer\Public
+ * @package EventLayer\Frontend
  * @since 1.0.0
  */
 class ScriptInjector {

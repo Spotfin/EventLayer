@@ -226,14 +226,13 @@ eventlayer/
 ├── readme.txt              # WordPress plugin readme
 ├── src/                    # Source code
 │   ├── Plugin.php          # Main plugin class
-│   ├── Admin/              # Admin functionality
-│   │   ├── Controllers/    # Admin controllers
-│   │   ├── CPT/           # Custom Post Type handling
-│   │   ├── Views/         # Admin templates
-│   │   └── Helpers/       # Admin helper functions
-│   ├── Public/            # Frontend functionality
-│   ├── Assets/            # CSS and JavaScript
-│   └── Tests/             # Test files
+│   ├── Admin/              # Admin functionality (CPT, meta boxes, controllers)
+│   │   └── Views/          # Admin templates
+│   ├── Frontend/           # Script injection
+│   ├── Pro/                # Pro feature gating
+│   ├── Support/            # Helper utilities
+│   ├── Assets/             # CSS and JavaScript
+│   └── Tests/              # Test files
 ├── languages/             # Translation files
 └── vendor/               # Composer dependencies
 ```

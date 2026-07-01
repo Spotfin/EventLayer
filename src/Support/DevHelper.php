@@ -7,7 +7,7 @@
  * @package EventLayer
  */
 
-namespace EventLayer\Admin\Helpers;
+namespace EventLayer\Support;
 
 /**
  * Development Helper Class

@@ -5,12 +5,12 @@
  * @package EventLayer
  */
 
-namespace EventLayer\Admin\Controllers;
+namespace EventLayer\Admin;
 
 /**
  * Admin controller for EventLayer: menus, pages, settings, and notices.
  *
- * @package EventLayer\Admin\Controllers
+ * @package EventLayer\Admin
  * @since 1.0.0
  */
 class AdminController {
@@ -60,7 +60,7 @@ class AdminController {
 			__( 'Event Rules', 'eventlayer' ),
 			__( 'Event Rules', 'eventlayer' ),
 			'manage_options',
-			'edit.php?post_type=' . \EventLayer\Admin\CPT\EventRulePostType::POST_TYPE
+			'edit.php?post_type=' . \EventLayer\Admin\EventRulePostType::POST_TYPE
 		);
 
 		// Add New Event Rule submenu.
@@ -69,7 +69,7 @@ class AdminController {
 			__( 'Add New Event Rule', 'eventlayer' ),
 			__( 'Add New', 'eventlayer' ),
 			'manage_options',
-			'post-new.php?post_type=' . \EventLayer\Admin\CPT\EventRulePostType::POST_TYPE
+			'post-new.php?post_type=' . \EventLayer\Admin\EventRulePostType::POST_TYPE
 		);
 
 		// Settings submenu.
@@ -221,7 +221,7 @@ class AdminController {
 	 * @return void
 	 */
 	public function admin_page() {
-		include __DIR__ . '/../Views/admin-main.php';
+		include __DIR__ . '/Views/admin-main.php';
 	}
 
 	/**
@@ -230,7 +230,7 @@ class AdminController {
 	 * @return void
 	 */
 	public function settings_page() {
-		include __DIR__ . '/../Views/admin-settings.php';
+		include __DIR__ . '/Views/admin-settings.php';
 	}
 
 	/**
