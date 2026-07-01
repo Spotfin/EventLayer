@@ -113,7 +113,9 @@ class ScriptInjector {
 			}
 
 			// Check if this rule should be active on current page and within schedule.
-			if ( ! $this->should_rule_be_active( $site_location ) || ! $this->is_within_schedule( $schedule_start, $schedule_end ) ) {
+			$is_active    = $this->should_rule_be_active( $site_location );
+			$is_scheduled = $this->is_within_schedule( $schedule_start, $schedule_end );
+			if ( ! $is_active || ! $is_scheduled ) {
 				continue;
 			}
 

@@ -22,9 +22,13 @@ if ( isset( $_POST['submit_event_rule'] ) && wp_verify_nonce( $_POST['eventlayer
 	$parameters = sanitize_textarea_field( $_POST['parameters'] );
 
 	if ( $repository->create( $event_type, $triggers, $parameters ) ) {
-		echo '<div class="notice notice-success"><p>' . esc_html__( 'Event rule created successfully!', 'eventlayer' ) . '</p></div>';
+		echo '<div class="notice notice-success"><p>'
+			. esc_html__( 'Event rule created successfully!', 'eventlayer' )
+			. '</p></div>';
 	} else {
-		echo '<div class="notice notice-error"><p>' . esc_html__( 'Error creating event rule.', 'eventlayer' ) . '</p></div>';
+		echo '<div class="notice notice-error"><p>'
+			. esc_html__( 'Error creating event rule.', 'eventlayer' )
+			. '</p></div>';
 	}
 }
 
@@ -54,7 +58,11 @@ $rules      = $repository->getAll();
 					<tbody>
 						<?php if ( empty( $rules ) ) : ?>
 							<tr>
-								<td colspan="5"><?php esc_html_e( 'No event rules found. Create your first rule!', 'eventlayer' ); ?></td>
+								<td colspan="5">
+									<?php
+									esc_html_e( 'No event rules found. Create your first rule!', 'eventlayer' );
+									?>
+								</td>
 							</tr>
 						<?php else : ?>
 							<?php foreach ( $rules as $rule ) : ?>
@@ -64,8 +72,12 @@ $rules      = $repository->getAll();
 									<td><?php echo esc_html( wp_trim_words( $rule->triggers, 10 ) ); ?></td>
 									<td><?php echo esc_html( wp_trim_words( $rule->parameters, 10 ) ); ?></td>
 									<td>
-										<a href="#" class="button button-small"><?php esc_html_e( 'Edit', 'eventlayer' ); ?></a>
-										<a href="#" class="button button-small button-link-delete"><?php esc_html_e( 'Delete', 'eventlayer' ); ?></a>
+										<a href="#" class="button button-small">
+											<?php esc_html_e( 'Edit', 'eventlayer' ); ?>
+										</a>
+										<a href="#" class="button button-small button-link-delete">
+											<?php esc_html_e( 'Delete', 'eventlayer' ); ?>
+										</a>
 									</td>
 								</tr>
 							<?php endforeach; ?>
@@ -84,9 +96,11 @@ $rules      = $repository->getAll();
 								<label for="event_type"><?php esc_html_e( 'Event Type', 'eventlayer' ); ?></label>
 							</th>
 							<td>
-								<input type="text" id="event_type" name="event_type" class="regular-text" 
+								<input type="text" id="event_type" name="event_type" class="regular-text"
 										placeholder="e.g., button_click, form_submit" required />
-								<p class="description"><?php esc_html_e( 'The name of the event to track', 'eventlayer' ); ?></p>
+								<p class="description">
+									<?php esc_html_e( 'The name of the event to track', 'eventlayer' ); ?>
+								</p>
 							</td>
 						</tr>
 						<tr>
@@ -94,17 +108,27 @@ $rules      = $repository->getAll();
 								<label for="triggers"><?php esc_html_e( 'Triggers (JSON)', 'eventlayer' ); ?></label>
 							</th>
 							<td>
-								<textarea id="triggers" name="triggers" rows="3" class="large-text" required>{"selector": ".test-button"}</textarea>
-								<p class="description"><?php esc_html_e( 'JSON object defining when this event should fire', 'eventlayer' ); ?></p>
+								<textarea id="triggers" name="triggers" rows="3" class="large-text"
+										required>{"selector": ".test-button"}</textarea>
+								<p class="description">
+									<?php
+									esc_html_e( 'JSON object defining when this event should fire', 'eventlayer' );
+									?>
+								</p>
 							</td>
 						</tr>
 						<tr>
 							<th scope="row">
-								<label for="parameters"><?php esc_html_e( 'Parameters (JSON)', 'eventlayer' ); ?></label>
+								<label for="parameters">
+									<?php esc_html_e( 'Parameters (JSON)', 'eventlayer' ); ?>
+								</label>
 							</th>
 							<td>
-								<textarea id="parameters" name="parameters" rows="3" class="large-text" required>{"button_text": "Test Button", "section": "header"}</textarea>
-								<p class="description"><?php esc_html_e( 'JSON object with data to send with the event', 'eventlayer' ); ?></p>
+								<textarea id="parameters" name="parameters" rows="3" class="large-text"
+										required>{"button_text": "Test Button", "section": "header"}</textarea>
+								<p class="description">
+									<?php esc_html_e( 'JSON object with data to send with the event', 'eventlayer' ); ?>
+								</p>
 							</td>
 						</tr>
 					</table>
@@ -122,7 +146,9 @@ $rules      = $repository->getAll();
 						<p><?php esc_html_e( 'Add this button to any page to test your events:', 'eventlayer' ); ?></p>
 						<code>&lt;button class="test-button"&gt;Test EventLayer&lt;/button&gt;</code>
 						<br><br>
-						<button class="test-button button"><?php esc_html_e( 'Test EventLayer (Click and check browser console)', 'eventlayer' ); ?></button>
+						<button class="test-button button">
+							<?php esc_html_e( 'Test EventLayer (Click and check browser console)', 'eventlayer' ); ?>
+						</button>
 					</div>
 				</div>
 

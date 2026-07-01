@@ -163,8 +163,11 @@ class AdminController {
 	 */
 	public function license_key_field_callback() {
 		$value = get_option( 'eventlayer_license_key', '' );
-		echo '<input type="text" name="eventlayer_license_key" value="' . esc_attr( $value ) . '" class="regular-text" autocomplete="off" />';
-		echo '<p class="description">' . esc_html__( 'Enter your EventLayer Pro license key to enable Pro features and updates.', 'eventlayer' ) . '</p>';
+		echo '<input type="text" name="eventlayer_license_key" value="' . esc_attr( $value )
+			. '" class="regular-text" autocomplete="off" />';
+		echo '<p class="description">'
+			. esc_html__( 'Enter your EventLayer Pro license key to enable Pro features and updates.', 'eventlayer' )
+			. '</p>';
 	}
 
 	/**
@@ -188,7 +191,12 @@ class AdminController {
 		echo '<input type="checkbox" name="eventlayer_debug_mode" value="1" ' . checked( $value, 1, false ) . ' />';
 		echo ' ' . esc_html__( 'Enable debug logging in browser console', 'eventlayer' );
 		echo '</label>';
-		echo '<p class="description">' . esc_html__( 'When enabled, EventLayer will log events to the browser console for debugging.', 'eventlayer' ) . '</p>';
+		echo '<p class="description">'
+			. esc_html__(
+				'When enabled, EventLayer will log events to the browser console for debugging.',
+				'eventlayer'
+			)
+			. '</p>';
 	}
 
 	/**
@@ -202,7 +210,9 @@ class AdminController {
 		echo '<input type="checkbox" name="eventlayer_auto_pageview" value="1" ' . checked( $value, 1, false ) . ' />';
 		echo ' ' . esc_html__( 'Automatically track page views', 'eventlayer' );
 		echo '</label>';
-		echo '<p class="description">' . esc_html__( 'Automatically push page_view events to the dataLayer on page load.', 'eventlayer' ) . '</p>';
+		echo '<p class="description">'
+			. esc_html__( 'Automatically push page_view events to the dataLayer on page load.', 'eventlayer' )
+			. '</p>';
 	}
 
 	/**
@@ -251,7 +261,10 @@ class AdminController {
 					<strong><?php esc_html_e( 'EventLayer:', 'eventlayer' ); ?></strong>
 					<?php
 					printf(
-						esc_html__( 'You are approaching the limit of %1$d event rules. You have %2$d rules remaining.', 'eventlayer' ),
+						esc_html__(
+							'You are approaching the limit of %1$d event rules. You have %2$d rules remaining.',
+							'eventlayer'
+						),
 						$max_rules,
 						$max_rules - $current_count
 					);

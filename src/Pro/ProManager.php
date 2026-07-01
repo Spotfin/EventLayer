@@ -192,7 +192,8 @@ class ProManager {
 		}
 
 		?>
-		<div class="eventlayer-pro-gate" style="background: #f9f9f9; border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 4px;">
+		<div class="eventlayer-pro-gate"
+			style="background: #f9f9f9; border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 4px;">
 			<h4 style="margin-top: 0; color: #d63638;">🔒 <?php echo esc_html( $title ); ?></h4>
 			<p style="margin-bottom: 10px;"><?php echo esc_html( $description ); ?></p>
 			<a href="<?php echo esc_url( self::get_upgrade_url() ); ?>" 

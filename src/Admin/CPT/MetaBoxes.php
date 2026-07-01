@@ -91,22 +91,35 @@ class MetaBoxes {
 		}
 
 		echo '<p><strong>' . esc_html__( 'Start', 'eventlayer' ) . '</strong><br/>';
-		echo '<label for="schedule_start_date" class="screen-reader-text">' . esc_html__( 'Start Date', 'eventlayer' ) . '</label>';
-		echo '<input type="date" id="schedule_start_date" name="schedule_start_date" value="' . esc_attr( $start_date ) . '" class="small-text" style="width: 100%;" />';
+		echo '<label for="schedule_start_date" class="screen-reader-text">'
+			. esc_html__( 'Start Date', 'eventlayer' ) . '</label>';
+		echo '<input type="date" id="schedule_start_date" name="schedule_start_date" value="'
+			. esc_attr( $start_date ) . '" class="small-text" style="width: 100%;" />';
 		echo '<br/>';
-		echo '<label for="schedule_start_time" class="screen-reader-text">' . esc_html__( 'Start Time', 'eventlayer' ) . '</label>';
-		echo '<input type="time" id="schedule_start_time" name="schedule_start_time" value="' . esc_attr( $start_time ) . '" class="small-text" style="width: 100%;" />';
+		echo '<label for="schedule_start_time" class="screen-reader-text">'
+			. esc_html__( 'Start Time', 'eventlayer' ) . '</label>';
+		echo '<input type="time" id="schedule_start_time" name="schedule_start_time" value="'
+			. esc_attr( $start_time ) . '" class="small-text" style="width: 100%;" />';
 		echo '</p>';
 
 		echo '<p><strong>' . esc_html__( 'End', 'eventlayer' ) . '</strong><br/>';
-		echo '<label for="schedule_end_date" class="screen-reader-text">' . esc_html__( 'End Date', 'eventlayer' ) . '</label>';
-		echo '<input type="date" id="schedule_end_date" name="schedule_end_date" value="' . esc_attr( $end_date ) . '" class="small-text" style="width: 100%;" />';
+		echo '<label for="schedule_end_date" class="screen-reader-text">'
+			. esc_html__( 'End Date', 'eventlayer' ) . '</label>';
+		echo '<input type="date" id="schedule_end_date" name="schedule_end_date" value="'
+			. esc_attr( $end_date ) . '" class="small-text" style="width: 100%;" />';
 		echo '<br/>';
-		echo '<label for="schedule_end_time" class="screen-reader-text">' . esc_html__( 'End Time', 'eventlayer' ) . '</label>';
-		echo '<input type="time" id="schedule_end_time" name="schedule_end_time" value="' . esc_attr( $end_time ) . '" class="small-text" style="width: 100%;" />';
+		echo '<label for="schedule_end_time" class="screen-reader-text">'
+			. esc_html__( 'End Time', 'eventlayer' ) . '</label>';
+		echo '<input type="time" id="schedule_end_time" name="schedule_end_time" value="'
+			. esc_attr( $end_time ) . '" class="small-text" style="width: 100%;" />';
 		echo '</p>';
 
-		echo '<p class="description">' . esc_html__( 'If set, the rule will only be active between the start and end times (site timezone). Leave blank for always on.', 'eventlayer' ) . '</p>';
+		echo '<p class="description">';
+		esc_html_e(
+			'If set, the rule will only be active between the start and end times (site timezone). Leave blank for always on.',
+			'eventlayer'
+		);
+		echo '</p>';
 	}
 
 	/**
@@ -199,18 +212,38 @@ class MetaBoxes {
 				<th scope="row"><?php esc_html_e( 'Site Location', 'eventlayer' ); ?></th>
 				<td>
 					<fieldset>
-						<label><input type="radio" name="site_location" value="all_pages" <?php checked( $site_location, 'all_pages' ); ?> /> <?php esc_html_e( 'All Pages', 'eventlayer' ); ?></label><br>
-						<label><input type="radio" name="site_location" value="homepage" <?php checked( $site_location, 'homepage' ); ?> /> <?php esc_html_e( 'Homepage Only', 'eventlayer' ); ?></label><br>
-						<label><input type="radio" name="site_location" value="specific_pages" <?php checked( $site_location, 'specific_pages' ); ?> /> <?php esc_html_e( 'Specific Pages', 'eventlayer' ); ?></label>
+						<label>
+							<input type="radio" name="site_location" value="all_pages"
+								<?php checked( $site_location, 'all_pages' ); ?> />
+							<?php esc_html_e( 'All Pages', 'eventlayer' ); ?>
+						</label><br>
+						<label>
+							<input type="radio" name="site_location" value="homepage"
+								<?php checked( $site_location, 'homepage' ); ?> />
+							<?php esc_html_e( 'Homepage Only', 'eventlayer' ); ?>
+						</label><br>
+						<label>
+							<input type="radio" name="site_location" value="specific_pages"
+								<?php checked( $site_location, 'specific_pages' ); ?> />
+							<?php esc_html_e( 'Specific Pages', 'eventlayer' ); ?>
+						</label>
 					</fieldset>
-					<p class="description"><?php esc_html_e( 'Choose where this event rule should be active.', 'eventlayer' ); ?></p>
+					<p class="description">
+						<?php esc_html_e( 'Choose where this event rule should be active.', 'eventlayer' ); ?>
+					</p>
 				</td>
 			</tr>
 			<?php else : ?>
 			<tr>
 				<th scope="row"><?php esc_html_e( 'Site Location', 'eventlayer' ); ?></th>
 				<td>
-					<?php \EventLayer\Pro\ProManager::render_feature_gate( 'site_location', 'Site Location Targeting', 'Target specific pages or sections of your site with EventLayer Pro.' ); ?>
+					<?php
+					\EventLayer\Pro\ProManager::render_feature_gate(
+						'site_location',
+						'Site Location Targeting',
+						'Target specific pages or sections of your site with EventLayer Pro.'
+					);
+					?>
 					<input type="hidden" name="site_location" value="all_pages" />
 				</td>
 			</tr>
@@ -218,18 +251,29 @@ class MetaBoxes {
 
 			<?php if ( \EventLayer\Pro\ProManager::has_feature( 'trigger_delay' ) ) : ?>
 			<tr>
-				<th scope="row"><label for="trigger_delay"><?php esc_html_e( 'Event Trigger Delay', 'eventlayer' ); ?></label></th>
+				<th scope="row">
+					<label for="trigger_delay"><?php esc_html_e( 'Event Trigger Delay', 'eventlayer' ); ?></label>
+				</th>
 				<td>
-					<input type="number" id="trigger_delay" name="trigger_delay" value="<?php echo esc_attr( $trigger_delay ); ?>" min="0" step="100" class="small-text" />
+					<input type="number" id="trigger_delay" name="trigger_delay"
+						value="<?php echo esc_attr( $trigger_delay ); ?>" min="0" step="100" class="small-text" />
 					<span><?php esc_html_e( 'milliseconds', 'eventlayer' ); ?></span>
-					<p class="description"><?php esc_html_e( 'Delay before the event is triggered (0 = immediate).', 'eventlayer' ); ?></p>
+					<p class="description">
+						<?php esc_html_e( 'Delay before the event is triggered (0 = immediate).', 'eventlayer' ); ?>
+					</p>
 				</td>
 			</tr>
 			<?php else : ?>
 			<tr>
 				<th scope="row"><?php esc_html_e( 'Event Trigger Delay', 'eventlayer' ); ?></th>
 				<td>
-					<?php \EventLayer\Pro\ProManager::render_feature_gate( 'trigger_delay', 'Event Trigger Delay', 'Add delays to event triggers for better tracking accuracy with EventLayer Pro.' ); ?>
+					<?php
+					\EventLayer\Pro\ProManager::render_feature_gate(
+						'trigger_delay',
+						'Event Trigger Delay',
+						'Add delays to event triggers for better tracking accuracy with EventLayer Pro.'
+					);
+					?>
 					<input type="hidden" name="trigger_delay" value="0" />
 				</td>
 			</tr>
@@ -239,15 +283,27 @@ class MetaBoxes {
 			<tr>
 				<th scope="row"><?php esc_html_e( 'Options', 'eventlayer' ); ?></th>
 				<td>
-					<label><input type="checkbox" name="stop_propagation" value="1" <?php checked( $stop_propagation, 1 ); ?> /> <?php esc_html_e( 'Stop Propagation', 'eventlayer' ); ?></label>
-					<p class="description"><?php esc_html_e( 'Prevent the event from bubbling up to parent elements.', 'eventlayer' ); ?></p>
+					<label>
+						<input type="checkbox" name="stop_propagation" value="1"
+							<?php checked( $stop_propagation, 1 ); ?> />
+						<?php esc_html_e( 'Stop Propagation', 'eventlayer' ); ?>
+					</label>
+					<p class="description">
+						<?php esc_html_e( 'Prevent the event from bubbling up to parent elements.', 'eventlayer' ); ?>
+					</p>
 				</td>
 			</tr>
 			<?php else : ?>
 			<tr>
 				<th scope="row"><?php esc_html_e( 'Options', 'eventlayer' ); ?></th>
 				<td>
-					<?php \EventLayer\Pro\ProManager::render_feature_gate( 'stop_propagation', 'Event Propagation Control', 'Control event bubbling behavior with EventLayer Pro.' ); ?>
+					<?php
+					\EventLayer\Pro\ProManager::render_feature_gate(
+						'stop_propagation',
+						'Event Propagation Control',
+						'Control event bubbling behavior with EventLayer Pro.'
+					);
+					?>
 					<input type="hidden" name="stop_propagation" value="0" />
 				</td>
 			</tr>
@@ -260,31 +316,67 @@ class MetaBoxes {
 					<?php if ( $has_scheduling ) : ?>
 						<div style="display:flex; gap:8px; flex-wrap:wrap;">
 							<div style="flex:1; min-width:140px;">
-								<label for="schedule_start_date" class="screen-reader-text"><?php esc_html_e( 'Start Date', 'eventlayer' ); ?></label>
-								<input type="date" id="schedule_start_date" name="schedule_start_date" value="<?php echo esc_attr( $start_date ); ?>" class="small-text" style="width: 100%;" />
+								<label for="schedule_start_date" class="screen-reader-text">
+									<?php esc_html_e( 'Start Date', 'eventlayer' ); ?>
+								</label>
+								<input type="date" id="schedule_start_date" name="schedule_start_date"
+									value="<?php echo esc_attr( $start_date ); ?>"
+									class="small-text" style="width: 100%;" />
 							</div>
 							<div style="flex:1; min-width:120px;">
-								<label for="schedule_start_time" class="screen-reader-text"><?php esc_html_e( 'Start Time', 'eventlayer' ); ?></label>
-								<input type="time" id="schedule_start_time" name="schedule_start_time" value="<?php echo esc_attr( $start_time ); ?>" class="small-text" style="width: 100%;" />
+								<label for="schedule_start_time" class="screen-reader-text">
+									<?php esc_html_e( 'Start Time', 'eventlayer' ); ?>
+								</label>
+								<input type="time" id="schedule_start_time" name="schedule_start_time"
+									value="<?php echo esc_attr( $start_time ); ?>"
+									class="small-text" style="width: 100%;" />
 							</div>
 						</div>
 						<div style="display:flex; gap:8px; flex-wrap:wrap; margin-top:6px;">
 							<div style="flex:1; min-width:140px;">
-								<label for="schedule_end_date" class="screen-reader-text"><?php esc_html_e( 'End Date', 'eventlayer' ); ?></label>
-								<input type="date" id="schedule_end_date" name="schedule_end_date" value="<?php echo esc_attr( $end_date ); ?>" class="small-text" style="width: 100%;" />
+								<label for="schedule_end_date" class="screen-reader-text">
+									<?php esc_html_e( 'End Date', 'eventlayer' ); ?>
+								</label>
+								<input type="date" id="schedule_end_date" name="schedule_end_date"
+									value="<?php echo esc_attr( $end_date ); ?>"
+									class="small-text" style="width: 100%;" />
 							</div>
 							<div style="flex:1; min-width:120px;">
-								<label for="schedule_end_time" class="screen-reader-text"><?php esc_html_e( 'End Time', 'eventlayer' ); ?></label>
-								<input type="time" id="schedule_end_time" name="schedule_end_time" value="<?php echo esc_attr( $end_time ); ?>" class="small-text" style="width: 100%;" />
+								<label for="schedule_end_time" class="screen-reader-text">
+									<?php esc_html_e( 'End Time', 'eventlayer' ); ?>
+								</label>
+								<input type="time" id="schedule_end_time" name="schedule_end_time"
+									value="<?php echo esc_attr( $end_time ); ?>"
+									class="small-text" style="width: 100%;" />
 							</div>
 						</div>
-						<p class="description"><?php esc_html_e( 'If set, the rule will only be active between the start and end times (site timezone). Leave blank for always on.', 'eventlayer' ); ?></p>
+						<p class="description">
+							<?php
+							esc_html_e(
+								'If set, the rule will only be active between the start and end times (site timezone). Leave blank for always on.',
+								'eventlayer'
+							);
+							?>
+						</p>
 					<?php else : ?>
-						<?php \EventLayer\Pro\ProManager::render_feature_gate( 'scheduling', __( 'Scheduling', 'eventlayer' ), __( 'Schedule event rules to start and stop automatically with EventLayer Pro.', 'eventlayer' ) ); ?>
-						<input type="hidden" name="schedule_start_date" value="<?php echo esc_attr( $start_date ); ?>" />
-						<input type="hidden" name="schedule_start_time" value="<?php echo esc_attr( $start_time ); ?>" />
-						<input type="hidden" name="schedule_end_date" value="<?php echo esc_attr( $end_date ); ?>" />
-						<input type="hidden" name="schedule_end_time" value="<?php echo esc_attr( $end_time ); ?>" />
+						<?php
+						\EventLayer\Pro\ProManager::render_feature_gate(
+							'scheduling',
+							__( 'Scheduling', 'eventlayer' ),
+							__(
+								'Schedule event rules to start and stop automatically with EventLayer Pro.',
+								'eventlayer'
+							)
+						);
+						?>
+						<input type="hidden" name="schedule_start_date"
+							value="<?php echo esc_attr( $start_date ); ?>" />
+						<input type="hidden" name="schedule_start_time"
+							value="<?php echo esc_attr( $start_time ); ?>" />
+						<input type="hidden" name="schedule_end_date"
+							value="<?php echo esc_attr( $end_date ); ?>" />
+						<input type="hidden" name="schedule_end_time"
+							value="<?php echo esc_attr( $end_time ); ?>" />
 					<?php endif; ?>
 				</td>
 			</tr>
@@ -305,6 +397,8 @@ class MetaBoxes {
 		$multiple_toggle = get_post_meta( $post->ID, '_multiple_toggle', true );
 		$child_selectors = get_post_meta( $post->ID, '_child_selectors', true );
 		$child_selectors = $child_selectors ? maybe_unserialize( $child_selectors ) : array();
+
+		$parent_selector_placeholder = __( 'e.g., .cta-button, #header-nav, [data-track]', 'eventlayer' );
 		?>
 		<table class="form-table">
 			<tr>
@@ -312,14 +406,19 @@ class MetaBoxes {
 					<label for="parent_selector"><?php esc_html_e( 'Parent Selector', 'eventlayer' ); ?></label>
 				</th>
 				<td>
-					<input type="text" 
-							id="parent_selector" 
-							name="parent_selector" 
-							value="<?php echo esc_attr( $parent_selector ); ?>" 
-							class="regular-text" 
-							placeholder="<?php esc_attr_e( 'e.g., .cta-button, #header-nav, [data-track]', 'eventlayer' ); ?>" />
+					<input type="text"
+							id="parent_selector"
+							name="parent_selector"
+							value="<?php echo esc_attr( $parent_selector ); ?>"
+							class="regular-text"
+							placeholder="<?php echo esc_attr( $parent_selector_placeholder ); ?>" />
 					<p class="description">
-						<?php esc_html_e( 'CSS selector for the element(s) that should trigger this event.', 'eventlayer' ); ?>
+						<?php
+						esc_html_e(
+							'CSS selector for the element(s) that should trigger this event.',
+							'eventlayer'
+						);
+						?>
 					</p>
 				</td>
 			</tr>
@@ -335,7 +434,9 @@ class MetaBoxes {
 						<?php esc_html_e( 'Track multiple instances of this selector', 'eventlayer' ); ?>
 					</label>
 					<p class="description">
-						<?php esc_html_e( 'Enable if the selector matches multiple elements on the page.', 'eventlayer' ); ?>
+						<?php
+						esc_html_e( 'Enable if the selector matches multiple elements on the page.', 'eventlayer' );
+						?>
 					</p>
 				</td>
 			</tr>
@@ -375,7 +476,9 @@ class MetaBoxes {
 						<?php esc_html_e( 'Add Child Selector', 'eventlayer' ); ?>
 					</button>
 					<p class="description">
-						<?php esc_html_e( 'Optional: Additional selectors for more specific targeting.', 'eventlayer' ); ?>
+						<?php
+						esc_html_e( 'Optional: Additional selectors for more specific targeting.', 'eventlayer' );
+						?>
 					</p>
 				</td>
 			</tr>
@@ -394,6 +497,8 @@ class MetaBoxes {
 		$parameters = get_post_meta( $post->ID, '_parameters', true );
 		$parameters = $parameters ? maybe_unserialize( $parameters ) : array();
 
+		$target_selector_placeholder = __( 'CSS selector or attribute name', 'eventlayer' );
+
 		// Base target types with filter to allow Pro (and 3rd parties) to add more.
 		$target_types = apply_filters(
 			'eventlayer_parameter_target_types',
@@ -408,17 +513,35 @@ class MetaBoxes {
 			<table style="display:none;">
 				<tbody>
 					<tr id="parameter-template-row" class="parameter-row">
-						<td><input type="text" name="__NAME__[name]" value="" placeholder="<?php esc_attr_e( 'parameter_name', 'eventlayer' ); ?>" class="regular-text" /></td>
-						<td><input type="text" name="__NAME__[default_value]" value="" placeholder="<?php esc_attr_e( 'Default value', 'eventlayer' ); ?>" class="regular-text" /></td>
+						<td>
+							<input type="text" name="__NAME__[name]" value=""
+								placeholder="<?php esc_attr_e( 'parameter_name', 'eventlayer' ); ?>"
+								class="regular-text" />
+						</td>
+						<td>
+							<input type="text" name="__NAME__[default_value]" value=""
+								placeholder="<?php esc_attr_e( 'Default value', 'eventlayer' ); ?>"
+								class="regular-text" />
+						</td>
 						<td>
 							<select name="__NAME__[target_type]">
 								<?php foreach ( $target_types as $slug => $label ) : ?>
-									<option value="<?php echo esc_attr( $slug ); ?>"><?php echo esc_html( $label ); ?></option>
+									<option value="<?php echo esc_attr( $slug ); ?>">
+										<?php echo esc_html( $label ); ?>
+									</option>
 								<?php endforeach; ?>
 							</select>
 						</td>
-						<td><input type="text" name="__NAME__[target_selector]" value="" placeholder="<?php esc_attr_e( 'CSS selector or attribute name', 'eventlayer' ); ?>" class="regular-text" /></td>
-						<td><button type="button" class="button remove-parameter"><?php esc_html_e( 'Remove', 'eventlayer' ); ?></button></td>
+						<td>
+							<input type="text" name="__NAME__[target_selector]" value=""
+								placeholder="<?php esc_attr_e( 'CSS selector or attribute name', 'eventlayer' ); ?>"
+								class="regular-text" />
+						</td>
+						<td>
+							<button type="button" class="button remove-parameter">
+								<?php esc_html_e( 'Remove', 'eventlayer' ); ?>
+							</button>
+						</td>
 					</tr>
 				</tbody>
 			</table>
@@ -453,17 +576,18 @@ class MetaBoxes {
 								<td>
 									<select name="parameters[<?php echo $index; ?>][target_type]">
 										<?php foreach ( $target_types as $slug => $label ) : ?>
-											<option value="<?php echo esc_attr( $slug ); ?>" <?php selected( $param['target_type'] ?? '', $slug ); ?>>
+											<option value="<?php echo esc_attr( $slug ); ?>"
+												<?php selected( $param['target_type'] ?? '', $slug ); ?>>
 												<?php echo esc_html( $label ); ?>
 											</option>
 										<?php endforeach; ?>
 									</select>
 								</td>
 								<td>
-									<input type="text" 
-											name="parameters[<?php echo $index; ?>][target_selector]" 
-											value="<?php echo esc_attr( $param['target_selector'] ?? '' ); ?>" 
-											placeholder="<?php esc_attr_e( 'CSS selector or attribute name', 'eventlayer' ); ?>" 
+									<input type="text"
+											name="parameters[<?php echo $index; ?>][target_selector]"
+											value="<?php echo esc_attr( $param['target_selector'] ?? '' ); ?>"
+											placeholder="<?php echo esc_attr( $target_selector_placeholder ); ?>"
 											class="regular-text" />
 								</td>
 								<td>
@@ -492,15 +616,17 @@ class MetaBoxes {
 							<td>
 								<select name="parameters[0][target_type]">
 									<?php foreach ( $target_types as $slug => $label ) : ?>
-										<option value="<?php echo esc_attr( $slug ); ?>"><?php echo esc_html( $label ); ?></option>
+										<option value="<?php echo esc_attr( $slug ); ?>">
+											<?php echo esc_html( $label ); ?>
+										</option>
 									<?php endforeach; ?>
 								</select>
 							</td>
 							<td>
-								<input type="text" 
-										name="parameters[0][target_selector]" 
-										value="" 
-										placeholder="<?php esc_attr_e( 'CSS selector or attribute name', 'eventlayer' ); ?>" 
+								<input type="text"
+										name="parameters[0][target_selector]"
+										value=""
+										placeholder="<?php echo esc_attr( $target_selector_placeholder ); ?>"
 										class="regular-text" />
 							</td>
 							<td>
@@ -517,10 +643,16 @@ class MetaBoxes {
 					<?php esc_html_e( 'Add Parameter', 'eventlayer' ); ?>
 				</button>
 			</p>
-			<?php if ( ! \EventLayer\Pro\ProManager::has_feature( 'element_attribute' ) || ! \EventLayer\Pro\ProManager::has_feature( 'url_parameter' ) ) : ?>
+			<?php
+			$show_pro_hint = ! \EventLayer\Pro\ProManager::has_feature( 'element_attribute' )
+				|| ! \EventLayer\Pro\ProManager::has_feature( 'url_parameter' );
+			?>
+			<?php if ( $show_pro_hint ) : ?>
 			<p class="description" style="margin-top: 8px; font-size: 12px; color: #666;">
 				🔒 <?php esc_html_e( 'Upgrade to Pro', 'eventlayer' ); ?>
-				<a href="<?php echo esc_url( \EventLayer\Pro\ProManager::get_upgrade_url() ); ?>" target="_blank"><?php esc_html_e( 'for Element Attribute and URL Parameter extraction', 'eventlayer' ); ?></a>
+				<a href="<?php echo esc_url( \EventLayer\Pro\ProManager::get_upgrade_url() ); ?>" target="_blank">
+					<?php esc_html_e( 'for Element Attribute and URL Parameter extraction', 'eventlayer' ); ?>
+				</a>
 			</p>
 			<?php endif; ?>
 		</div>

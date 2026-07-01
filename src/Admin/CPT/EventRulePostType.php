@@ -30,7 +30,12 @@ class EventRulePostType {
 		add_action( 'init', array( $this, 'register_meta_fields' ) );
 		add_filter( 'enter_title_here', array( $this, 'change_title_placeholder' ) );
 		add_filter( 'manage_' . self::POST_TYPE . '_posts_columns', array( $this, 'custom_columns' ) );
-		add_action( 'manage_' . self::POST_TYPE . '_posts_custom_column', array( $this, 'custom_column_content' ), 10, 2 );
+		add_action(
+			'manage_' . self::POST_TYPE . '_posts_custom_column',
+			array( $this, 'custom_column_content' ),
+			10,
+			2
+		);
 	}
 
 	/**
@@ -54,15 +59,47 @@ class EventRulePostType {
 			'parent_item_colon'     => __( 'Parent Event Rules:', 'eventlayer' ),
 			'not_found'             => __( 'No event rules found.', 'eventlayer' ),
 			'not_found_in_trash'    => __( 'No event rules found in Trash.', 'eventlayer' ),
-			'featured_image'        => _x( 'Event Rule Cover Image', 'Overrides the "Featured Image" phrase', 'eventlayer' ),
-			'set_featured_image'    => _x( 'Set cover image', 'Overrides the "Set featured image" phrase', 'eventlayer' ),
-			'remove_featured_image' => _x( 'Remove cover image', 'Overrides the "Remove featured image" phrase', 'eventlayer' ),
-			'use_featured_image'    => _x( 'Use as cover image', 'Overrides the "Use as featured image" phrase', 'eventlayer' ),
+			'featured_image'        => _x(
+				'Event Rule Cover Image',
+				'Overrides the "Featured Image" phrase',
+				'eventlayer'
+			),
+			'set_featured_image'    => _x(
+				'Set cover image',
+				'Overrides the "Set featured image" phrase',
+				'eventlayer'
+			),
+			'remove_featured_image' => _x(
+				'Remove cover image',
+				'Overrides the "Remove featured image" phrase',
+				'eventlayer'
+			),
+			'use_featured_image'    => _x(
+				'Use as cover image',
+				'Overrides the "Use as featured image" phrase',
+				'eventlayer'
+			),
 			'archives'              => _x( 'Event Rule archives', 'The post type archive label', 'eventlayer' ),
-			'insert_into_item'      => _x( 'Insert into event rule', 'Overrides the "Insert into post" phrase', 'eventlayer' ),
-			'uploaded_to_this_item' => _x( 'Uploaded to this event rule', 'Overrides the "Uploaded to this post" phrase', 'eventlayer' ),
-			'filter_items_list'     => _x( 'Filter event rules list', 'Screen reader text for the filter links', 'eventlayer' ),
-			'items_list_navigation' => _x( 'Event rules list navigation', 'Screen reader text for the pagination', 'eventlayer' ),
+			'insert_into_item'      => _x(
+				'Insert into event rule',
+				'Overrides the "Insert into post" phrase',
+				'eventlayer'
+			),
+			'uploaded_to_this_item' => _x(
+				'Uploaded to this event rule',
+				'Overrides the "Uploaded to this post" phrase',
+				'eventlayer'
+			),
+			'filter_items_list'     => _x(
+				'Filter event rules list',
+				'Screen reader text for the filter links',
+				'eventlayer'
+			),
+			'items_list_navigation' => _x(
+				'Event rules list navigation',
+				'Screen reader text for the pagination',
+				'eventlayer'
+			),
 			'items_list'            => _x( 'Event rules list', 'Screen reader text for the items list', 'eventlayer' ),
 		);
 
