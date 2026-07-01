@@ -26,7 +26,7 @@ class ProManager {
 	 *
 	 * @var bool
 	 */
-	private static $pro_features_enabled = false; // Change to false to enable gating
+	private static $pro_features_enabled = false; // Change to false to enable gating.
 
 	/**
 	 * Whether the pro version is installed and active
@@ -39,7 +39,7 @@ class ProManager {
 	 * Initialize the pro manager
 	 */
 	public static function init() {
-		// Check if pro version is active (placeholder for future)
+		// Check if pro version is active (placeholder for future).
 		self::$pro_version_active = self::check_pro_license();
 
 		// Inject Pro-only parameter target types into the editor when Pro is active.
@@ -68,12 +68,12 @@ class ProManager {
 	 * @return bool True if pro features should be available
 	 */
 	public static function is_pro_active() {
-		// If pro features are globally enabled, return true
+		// If pro features are globally enabled, return true.
 		if ( self::$pro_features_enabled ) {
 			return true;
 		}
 
-		// Otherwise check if pro version is active
+		// Otherwise check if pro version is active.
 		return self::$pro_version_active;
 	}
 
@@ -84,12 +84,12 @@ class ProManager {
 	 * @return bool True if feature is available
 	 */
 	public static function has_feature( $feature ) {
-		// If pro features are globally enabled, all features are available
+		// If pro features are globally enabled, all features are available.
 		if ( self::$pro_features_enabled ) {
 			return true;
 		}
 
-		// Define which features require pro
+		// Define which features require pro.
 		$pro_features = array(
 			'site_location',
 			'trigger_delay',
@@ -104,12 +104,12 @@ class ProManager {
 			'scheduling',
 		);
 
-		// If not a pro feature, it's always available
+		// If not a pro feature, it's always available.
 		if ( ! in_array( $feature, $pro_features, true ) ) {
 			return true;
 		}
 
-		// Check if pro is active for pro features
+		// Check if pro is active for pro features.
 		return self::is_pro_active();
 	}
 
@@ -138,7 +138,7 @@ class ProManager {
 	 */
 	public static function get_max_rules() {
 		if ( self::is_pro_active() ) {
-			return 0; // Unlimited
+			return 0; // Unlimited.
 		}
 
 		return self::should_enforce_limits() ? 5 : 0;
@@ -170,7 +170,7 @@ class ProManager {
 	public static function can_create_rule() {
 		$max_rules = self::get_max_rules();
 
-		// If unlimited (0), always allow
+		// If unlimited (0), always allow.
 		if ( 0 === $max_rules ) {
 			return true;
 		}
@@ -186,7 +186,7 @@ class ProManager {
 	 * @param string $description The gate description.
 	 */
 	public static function render_feature_gate( $feature, $title, $description ) {
-		// If feature is available, don't show gate
+		// If feature is available, don't show gate.
 		if ( self::has_feature( $feature ) ) {
 			return;
 		}

@@ -27,27 +27,27 @@ class SaveHandler {
 	 * @return void
 	 */
 	public function save_meta_data( $post_id, $post ) {
-		// Verify nonce
+		// Verify nonce.
 		if ( ! isset( $_POST['eventlayer_meta_nonce'] ) || ! wp_verify_nonce( $_POST['eventlayer_meta_nonce'], 'eventlayer_save_meta' ) ) {
 			return;
 		}
 
-		// Check autosave
+		// Check autosave.
 		if ( defined( 'DOING_AUTOSAVE' ) && DOING_AUTOSAVE ) {
 			return;
 		}
 
-		// Check permissions
+		// Check permissions.
 		if ( ! current_user_can( 'edit_post', $post_id ) ) {
 			return;
 		}
 
-		// Save Event Type
+		// Save Event Type.
 		if ( isset( $_POST['event_type'] ) ) {
 			update_post_meta( $post_id, '_event_type', sanitize_text_field( $_POST['event_type'] ) );
 		}
 
-		// Save Site Location
+		// Save Site Location.
 		if ( isset( $_POST['site_location'] ) ) {
 			$allowed_locations = array( 'all_pages', 'homepage', 'specific_pages' );
 			$site_location     = sanitize_text_field( $_POST['site_location'] );
@@ -56,26 +56,26 @@ class SaveHandler {
 			}
 		}
 
-		// Save Event Trigger Delay
+		// Save Event Trigger Delay.
 		if ( isset( $_POST['trigger_delay'] ) ) {
 			$trigger_delay = absint( $_POST['trigger_delay'] );
 			update_post_meta( $post_id, '_trigger_delay', $trigger_delay );
 		}
 
-		// Save Stop Propagation
+		// Save Stop Propagation.
 		$stop_propagation = isset( $_POST['stop_propagation'] ) ? 1 : 0;
 		update_post_meta( $post_id, '_stop_propagation', $stop_propagation );
 
-		// Save Parent Selector
+		// Save Parent Selector.
 		if ( isset( $_POST['parent_selector'] ) ) {
 			update_post_meta( $post_id, '_parent_selector', sanitize_text_field( $_POST['parent_selector'] ) );
 		}
 
-		// Save Multiple Toggle
+		// Save Multiple Toggle.
 		$multiple_toggle = isset( $_POST['multiple_toggle'] ) ? 1 : 0;
 		update_post_meta( $post_id, '_multiple_toggle', $multiple_toggle );
 
-		// Save Child Selectors
+		// Save Child Selectors.
 		$child_selectors = array();
 		if ( isset( $_POST['child_selectors'] ) && is_array( $_POST['child_selectors'] ) ) {
 			foreach ( $_POST['child_selectors'] as $selector ) {
@@ -87,12 +87,12 @@ class SaveHandler {
 		}
 		update_post_meta( $post_id, '_child_selectors', maybe_serialize( $child_selectors ) );
 
-		// Save Parameters
+		// Save Parameters.
 		$parameters = array();
 		if ( isset( $_POST['parameters'] ) && is_array( $_POST['parameters'] ) ) {
 			foreach ( $_POST['parameters'] as $index => $param ) {
 				if ( empty( $param['name'] ) ) {
-					continue; // Skip empty parameter names
+					continue; // Skip empty parameter names.
 				}
 
 				$parameter = array(
@@ -102,7 +102,7 @@ class SaveHandler {
 					'target_selector' => sanitize_text_field( $param['target_selector'] ?? '' ),
 				);
 
-				// Validate target type
+				// Validate target type.
 				$allowed_types = array( 'static', 'element_text', 'element_attribute', 'url_parameter' );
 				if ( ! in_array( $parameter['target_type'], $allowed_types, true ) ) {
 					$parameter['target_type'] = 'static';
@@ -113,7 +113,7 @@ class SaveHandler {
 		}
 		update_post_meta( $post_id, '_parameters', maybe_serialize( $parameters ) );
 
-		// Save Scheduling (Pro feature; values persist even if not active)
+		// Save Scheduling (Pro feature; values persist even if not active).
 		$sd = isset( $_POST['schedule_start_date'] ) ? sanitize_text_field( wp_unslash( $_POST['schedule_start_date'] ) ) : '';
 		$st = isset( $_POST['schedule_start_time'] ) ? sanitize_text_field( wp_unslash( $_POST['schedule_start_time'] ) ) : '';
 		$ed = isset( $_POST['schedule_end_date'] ) ? sanitize_text_field( wp_unslash( $_POST['schedule_end_date'] ) ) : '';

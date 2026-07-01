@@ -80,7 +80,7 @@ class Plugin {
 		add_action( 'plugins_loaded', array( $this, 'init' ) );
 		add_action( 'init', array( $this, 'load_textdomain' ) );
 
-		// Register activation hook
+		// Register activation hook.
 		register_activation_hook( $this->plugin_file, array( $this, 'activate' ) );
 	}
 
@@ -90,10 +90,10 @@ class Plugin {
 	 * @return void
 	 */
 	public function init() {
-		// Initialize Pro Manager
+		// Initialize Pro Manager.
 		\EventLayer\Pro\ProManager::init();
 
-		// Initialize plugin components
+		// Initialize plugin components.
 		$this->init_admin();
 		$this->init_public();
 	}
@@ -105,23 +105,23 @@ class Plugin {
 	 */
 	private function init_admin() {
 		if ( is_admin() ) {
-			// Initialize Custom Post Type
+			// Initialize Custom Post Type.
 			$post_type = new \EventLayer\Admin\CPT\EventRulePostType();
 			$post_type->init();
 
-			// Initialize Meta Boxes
+			// Initialize Meta Boxes.
 			$meta_boxes = new \EventLayer\Admin\CPT\MetaBoxes();
 			$meta_boxes->init();
 
-			// Initialize Save Handler
+			// Initialize Save Handler.
 			$save_handler = new \EventLayer\Admin\CPT\SaveHandler();
 			$save_handler->init();
 
-			// Initialize admin controller (for menu integration)
+			// Initialize admin controller (for menu integration).
 			$admin_controller = new \EventLayer\Admin\Controllers\AdminController();
 			$admin_controller->init();
 
-			// Initialize development helper
+			// Initialize development helper.
 			\EventLayer\Admin\Helpers\DevHelper::init();
 		}
 	}
@@ -132,7 +132,7 @@ class Plugin {
 	 * @return void
 	 */
 	public function activate() {
-		// Flush rewrite rules to register the new post type
+		// Flush rewrite rules to register the new post type.
 		flush_rewrite_rules();
 	}
 
@@ -143,7 +143,7 @@ class Plugin {
 	 */
 	private function init_public() {
 		if ( ! is_admin() ) {
-			// Initialize script injector
+			// Initialize script injector.
 			$script_injector = new \EventLayer\Public\ScriptInjector();
 			$script_injector->init();
 		}

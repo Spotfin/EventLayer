@@ -38,7 +38,7 @@ class AdminController {
 	 * @return void
 	 */
 	public function add_admin_menu() {
-		// Main EventLayer menu page
+		// Main EventLayer menu page.
 		add_menu_page(
 			__( 'EventLayer', 'eventlayer' ),
 			__( 'EventLayer', 'eventlayer' ),
@@ -49,7 +49,7 @@ class AdminController {
 			30
 		);
 
-		// Event Rules submenu (points to CPT list)
+		// Event Rules submenu (points to CPT list).
 		add_submenu_page(
 			'eventlayer',
 			__( 'Event Rules', 'eventlayer' ),
@@ -58,7 +58,7 @@ class AdminController {
 			'edit.php?post_type=' . \EventLayer\Admin\CPT\EventRulePostType::POST_TYPE
 		);
 
-		// Add New Event Rule submenu
+		// Add New Event Rule submenu.
 		add_submenu_page(
 			'eventlayer',
 			__( 'Add New Event Rule', 'eventlayer' ),
@@ -67,7 +67,7 @@ class AdminController {
 			'post-new.php?post_type=' . \EventLayer\Admin\CPT\EventRulePostType::POST_TYPE
 		);
 
-		// Settings submenu
+		// Settings submenu.
 		add_submenu_page(
 			'eventlayer',
 			__( 'Settings', 'eventlayer' ),
@@ -84,7 +84,7 @@ class AdminController {
 	 * @return void
 	 */
 	public function register_settings() {
-		// Register settings group
+		// Register settings group.
 		register_setting(
 			'eventlayer_settings',
 			'eventlayer_debug_mode',
@@ -105,7 +105,7 @@ class AdminController {
 			)
 		);
 
-		// Add settings section
+		// Add settings section.
 		add_settings_section(
 			'eventlayer_general_settings',
 			__( 'General Settings', 'eventlayer' ),
@@ -113,7 +113,7 @@ class AdminController {
 			'eventlayer_settings'
 		);
 
-		// Add settings fields
+		// Add settings fields.
 		add_settings_field(
 			'eventlayer_debug_mode',
 			__( 'Debug Mode', 'eventlayer' ),
@@ -130,7 +130,7 @@ class AdminController {
 			'eventlayer_general_settings'
 		);
 
-		// Register license key option
+		// Register license key option.
 		register_setting(
 			'eventlayer_settings',
 			'eventlayer_license_key',
@@ -141,7 +141,7 @@ class AdminController {
 			)
 		);
 
-		// Add license key field
+		// Add license key field.
 		add_settings_field(
 			'eventlayer_license_key',
 			__( 'Pro License Key', 'eventlayer' ),
@@ -224,13 +224,13 @@ class AdminController {
 	 * @return void
 	 */
 	public function maybe_show_rule_limit_notice() {
-		// Only show on event rule pages
+		// Only show on event rule pages.
 		$screen = get_current_screen();
 		if ( ! $screen || 'event_rule' !== $screen->post_type ) {
 			return;
 		}
 
-		// Don't show if pro features are enabled
+		// Don't show if pro features are enabled.
 		if ( ! \EventLayer\Pro\ProManager::should_enforce_limits() ) {
 			return;
 		}
@@ -238,7 +238,7 @@ class AdminController {
 		$current_count = \EventLayer\Pro\ProManager::get_current_rule_count();
 		$max_rules     = \EventLayer\Pro\ProManager::get_max_rules();
 
-		// Show warning when approaching limit
+		// Show warning when approaching limit.
 		if ( $current_count >= $max_rules - 1 && $current_count < $max_rules ) {
 			?>
 			<div class="notice notice-warning">
@@ -259,7 +259,7 @@ class AdminController {
 			<?php
 		}
 
-		// Show error when limit reached
+		// Show error when limit reached.
 		if ( $current_count >= $max_rules ) {
 			?>
 			<div class="notice notice-error">
@@ -324,7 +324,7 @@ class AdminController {
 		}
 
 		if ( ! \EventLayer\Pro\ProManager::can_create_rule() ) {
-			// Remove actions that create new posts
+			// Remove actions that create new posts.
 			unset( $actions['inline'], $actions['duplicate'] );
 		}
 

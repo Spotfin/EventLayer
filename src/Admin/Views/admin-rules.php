@@ -6,14 +6,14 @@
  * @since 1.0.0
  */
 
-// Prevent direct access
+// Prevent direct access.
 if ( ! defined( 'ABSPATH' ) ) {
 	exit;
 }
 
 use EventLayer\Data\EventRuleRepository;
 
-// Handle form submission
+// Handle form submission.
 if ( isset( $_POST['submit_event_rule'] ) && wp_verify_nonce( $_POST['eventlayer_nonce'], 'eventlayer_add_rule' ) ) {
 	$repository = new EventRuleRepository();
 

@@ -27,7 +27,7 @@ class ScriptInjector {
 	 * @return void
 	 */
 	public function enqueue_scripts() {
-		// Enqueue frontend script
+		// Enqueue frontend script.
 		wp_enqueue_script(
 			'eventlayer-frontend',
 			plugin_dir_url( __FILE__ ) . '../Assets/js/frontend.js',
@@ -36,10 +36,10 @@ class ScriptInjector {
 			true
 		);
 
-		// Get all published event rules
+		// Get all published event rules.
 		$event_rules = $this->get_event_rules();
 
-		// Localize script with settings and event rules
+		// Localize script with settings and event rules.
 		wp_localize_script(
 			'eventlayer-frontend',
 			'eventLayerSettings',
@@ -51,7 +51,7 @@ class ScriptInjector {
 
 		wp_localize_script( 'eventlayer-frontend', 'eventLayerConfig', $event_rules );
 
-		// Enqueue frontend styles
+		// Enqueue frontend styles.
 		wp_enqueue_style(
 			'eventlayer-frontend',
 			plugin_dir_url( __FILE__ ) . '../Assets/css/frontend.css',
@@ -68,7 +68,7 @@ class ScriptInjector {
 	private function get_event_rules() {
 		$rules = array();
 
-		// Query published event rules
+		// Query published event rules.
 		$posts = get_posts(
 			array(
 				'post_type'      => EventRulePostType::POST_TYPE,
@@ -90,7 +90,7 @@ class ScriptInjector {
 		);
 
 		foreach ( $posts as $post ) {
-			// Get all meta data
+			// Get all meta data.
 			$event_type       = get_post_meta( $post->ID, '_event_type', true );
 			$site_location    = get_post_meta( $post->ID, '_site_location', true );
 			$trigger_delay    = absint( get_post_meta( $post->ID, '_trigger_delay', true ) );
@@ -102,21 +102,21 @@ class ScriptInjector {
 			$schedule_start   = get_post_meta( $post->ID, '_schedule_start', true );
 			$schedule_end     = get_post_meta( $post->ID, '_schedule_end', true );
 
-			// Skip if essential data is missing
+			// Skip if essential data is missing.
 			if ( empty( $event_type ) || empty( $parent_selector ) ) {
 				continue;
 			}
 
-			// Check if this rule should be active on current page and within schedule
+			// Check if this rule should be active on current page and within schedule.
 			if ( ! $this->should_rule_be_active( $site_location ) || ! $this->is_within_schedule( $schedule_start, $schedule_end ) ) {
 				continue;
 			}
 
-			// Unserialize arrays
+			// Unserialize arrays.
 			$child_selectors = $child_selectors ? maybe_unserialize( $child_selectors ) : array();
 			$parameters      = $parameters ? maybe_unserialize( $parameters ) : array();
 
-			// Sanitize and prepare the rule
+			// Sanitize and prepare the rule.
 			$rule = array(
 				'id'              => $post->ID,
 				'title'           => sanitize_text_field( $post->post_title ),
@@ -150,7 +150,7 @@ class ScriptInjector {
 				return is_front_page();
 
 			case 'specific_pages':
-				// For now, treat as all pages. Later we can add page selection meta
+				// For now, treat as all pages. Later we can add page selection meta.
 				return true;
 
 			case 'all_pages':
@@ -196,7 +196,7 @@ class ScriptInjector {
 	 * @return bool
 	 */
 	private function is_within_schedule( $start, $end ) {
-		$now = current_time( 'timestamp' ); // site timezone
+		$now = current_time( 'timestamp' ); // site timezone.
 
 		$start_ok = true;
 		$end_ok   = true;

@@ -18,7 +18,7 @@ class DevHelper {
 	 * Initialize development helper
 	 */
 	public static function init() {
-		// Only add development features in development environment
+		// Only add development features in development environment.
 		if ( defined( 'WP_DEBUG' ) && WP_DEBUG ) {
 			add_action( 'admin_bar_menu', array( __CLASS__, 'add_admin_bar_menu' ), 100 );
 			add_action( 'wp_ajax_eventlayer_toggle_pro', array( __CLASS__, 'toggle_pro_features' ) );
@@ -72,7 +72,7 @@ class DevHelper {
 			wp_die( 'Invalid action' );
 		}
 
-		// Redirect back with message
+		// Redirect back with message.
 		$redirect_url = add_query_arg(
 			array(
 				'eventlayer_message' => urlencode( $message ),

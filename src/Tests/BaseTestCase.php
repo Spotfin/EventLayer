@@ -19,7 +19,7 @@ abstract class BaseTestCase extends TestCase {
 	 */
 	protected function setUp(): void {
 		parent::setUp();
-		// Test setup code here
+		// Test setup code here.
 	}
 
 	/**
@@ -29,6 +29,6 @@ abstract class BaseTestCase extends TestCase {
 	 */
 	protected function tearDown(): void {
 		parent::tearDown();
-		// Test cleanup code here
+		// Test cleanup code here.
 	}
 }

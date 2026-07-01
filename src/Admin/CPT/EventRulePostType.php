@@ -66,7 +66,7 @@ class EventRulePostType {
 			'public'             => false,
 			'publicly_queryable' => false,
 			'show_ui'            => true,
-			'show_in_menu'       => false, // We'll add it manually under EventLayer menu
+			'show_in_menu'       => false, // We'll add it manually under EventLayer menu.
 			'show_in_nav_menus'  => false,
 			'show_in_admin_bar'  => false,
 			'query_var'          => false,
@@ -76,8 +76,8 @@ class EventRulePostType {
 			'hierarchical'       => false,
 			'menu_position'      => null,
 			'menu_icon'          => 'dashicons-analytics',
-			'supports'           => array( 'title' ), // Only title support
-			'show_in_rest'       => true, // Enable REST API for potential future use
+			'supports'           => array( 'title' ), // Only title support.
+			'show_in_rest'       => true, // Enable REST API for potential future use.
 		);
 
 		register_post_type( self::POST_TYPE, $args );
@@ -89,7 +89,7 @@ class EventRulePostType {
 	 * @return void
 	 */
 	public function register_meta_fields() {
-		// Event Type
+		// Event Type.
 		register_post_meta(
 			self::POST_TYPE,
 			'_event_type',
@@ -101,7 +101,7 @@ class EventRulePostType {
 			)
 		);
 
-		// Site Location
+		// Site Location.
 		register_post_meta(
 			self::POST_TYPE,
 			'_site_location',
@@ -113,7 +113,7 @@ class EventRulePostType {
 			)
 		);
 
-		// Event Trigger Delay
+		// Event Trigger Delay.
 		register_post_meta(
 			self::POST_TYPE,
 			'_trigger_delay',
@@ -125,7 +125,7 @@ class EventRulePostType {
 			)
 		);
 
-		// Stop Propagation
+		// Stop Propagation.
 		register_post_meta(
 			self::POST_TYPE,
 			'_stop_propagation',
@@ -137,7 +137,7 @@ class EventRulePostType {
 			)
 		);
 
-		// Trigger Elements - Parent Selector
+		// Trigger Elements - Parent Selector.
 		register_post_meta(
 			self::POST_TYPE,
 			'_parent_selector',
@@ -149,7 +149,7 @@ class EventRulePostType {
 			)
 		);
 
-		// Trigger Elements - Multiple Toggle
+		// Trigger Elements - Multiple Toggle.
 		register_post_meta(
 			self::POST_TYPE,
 			'_multiple_toggle',
@@ -161,7 +161,7 @@ class EventRulePostType {
 			)
 		);
 
-		// Trigger Elements - Child Selectors (serialized array)
+		// Trigger Elements - Child Selectors (serialized array).
 		register_post_meta(
 			self::POST_TYPE,
 			'_child_selectors',
@@ -173,7 +173,7 @@ class EventRulePostType {
 			)
 		);
 
-		// Parameters (serialized array)
+		// Parameters (serialized array).
 		register_post_meta(
 			self::POST_TYPE,
 			'_parameters',
@@ -207,14 +207,14 @@ class EventRulePostType {
 	 * @return array
 	 */
 	public function custom_columns( $columns ) {
-		// Remove date column
+		// Remove date column.
 		unset( $columns['date'] );
 
-		// Add custom columns
+		// Add custom columns.
 		$columns['event_type'] = __( 'Event Type', 'eventlayer' );
 		$columns['location']   = __( 'Location', 'eventlayer' );
 		$columns['selector']   = __( 'Selector', 'eventlayer' );
-		$columns['date']       = __( 'Date', 'eventlayer' ); // Re-add date at the end
+		$columns['date']       = __( 'Date', 'eventlayer' ); // Re-add date at the end.
 
 		return $columns;
 	}

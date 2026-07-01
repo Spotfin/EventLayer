@@ -77,7 +77,7 @@ class MetaBoxes {
 				__( 'Scheduling', 'eventlayer' ),
 				__( 'Schedule event rules to start and stop automatically with EventLayer Pro.', 'eventlayer' )
 			);
-			// Preserve values via hidden fields
+			// Preserve values via hidden fields.
 			echo '<input type="hidden" name="schedule_start_date" value="' . esc_attr( $start_date ) . '" />';
 			echo '<input type="hidden" name="schedule_start_time" value="' . esc_attr( $start_time ) . '" />';
 			echo '<input type="hidden" name="schedule_end_date" value="' . esc_attr( $end_date ) . '" />';
@@ -155,10 +155,10 @@ class MetaBoxes {
 	 * @return void
 	 */
 	public function event_settings_callback( $post ) {
-		// Add nonce field
+		// Add nonce field.
 		wp_nonce_field( 'eventlayer_save_meta', 'eventlayer_meta_nonce' );
 
-		// Get current values
+		// Get current values.
 		$event_type       = get_post_meta( $post->ID, '_event_type', true );
 		$site_location    = get_post_meta( $post->ID, '_site_location', true ) ?: 'all_pages';
 		$trigger_delay    = get_post_meta( $post->ID, '_trigger_delay', true );
@@ -295,7 +295,7 @@ class MetaBoxes {
 	 * @return void
 	 */
 	public function trigger_elements_callback( $post ) {
-		// Get current values
+		// Get current values.
 		$parent_selector = get_post_meta( $post->ID, '_parent_selector', true );
 		$multiple_toggle = get_post_meta( $post->ID, '_multiple_toggle', true );
 		$child_selectors = get_post_meta( $post->ID, '_child_selectors', true );
@@ -385,11 +385,11 @@ class MetaBoxes {
 	 * @return void
 	 */
 	public function parameters_callback( $post ) {
-		// Get current values
+		// Get current values.
 		$parameters = get_post_meta( $post->ID, '_parameters', true );
 		$parameters = $parameters ? maybe_unserialize( $parameters ) : array();
 
-		// Base target types with filter to allow Pro (and 3rd parties) to add more
+		// Base target types with filter to allow Pro (and 3rd parties) to add more.
 		$target_types = apply_filters(
 			'eventlayer_parameter_target_types',
 			array(
