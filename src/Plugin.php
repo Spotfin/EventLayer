@@ -122,9 +122,15 @@ class Plugin {
 			$save_handler = new \EventLayer\Admin\SaveHandler();
 			$save_handler->init();
 
-			// Initialize admin controller (for menu integration).
-			$admin_controller = new \EventLayer\Admin\AdminController();
-			$admin_controller->init();
+			// Initialize admin menu, settings, and gating UI.
+			$menu = new \EventLayer\Admin\Menu();
+			$menu->init();
+
+			$settings = new \EventLayer\Admin\Settings();
+			$settings->init();
+
+			$gating_ui = new \EventLayer\Admin\GatingUi();
+			$gating_ui->init();
 
 			// Initialize development helper.
 			\EventLayer\Support\DevHelper::init();
