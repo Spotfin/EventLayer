@@ -297,28 +297,19 @@ Enable debug mode in **EventLayer → Settings** to see console output:
 
 ## 📚 Hooks & Filters
 
-EventLayer provides several hooks for customization:
-
-### Actions
-```php
-// Before event rule processing
-do_action( 'eventlayer_before_rule_processing', $rule );
-
-// After event injection
-do_action( 'eventlayer_after_script_injection', $rules );
-```
-
 ### Filters
 ```php
-// Filter event rules
-$rules = apply_filters( 'eventlayer_event_rules', $rules );
-
-// Filter JavaScript config
-$config = apply_filters( 'eventlayer_js_config', $config );
-
-// Filter debug mode
-$debug = apply_filters( 'eventlayer_debug_mode', $debug );
+// Add or modify parameter target types (used by Pro and third parties)
+$target_types = apply_filters(
+	'eventlayer_parameter_target_types',
+	array(
+		'static'       => __( 'Static Value', 'eventlayer' ),
+		'element_text' => __( 'Element Text', 'eventlayer' ),
+	)
+);
 ```
+
+Note: debug mode is controlled by the `eventlayer_debug_mode` *option* (Settings → Debug Mode), not a filter. Additional extension hooks will be added as part of the free/pro extension API.
 
 ## 📄 License
 
