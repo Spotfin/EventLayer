@@ -203,7 +203,9 @@ class ScriptInjector {
 	 * @return bool
 	 */
 	private function is_within_schedule( $start, $end ) {
-		$now = current_time( 'timestamp' ); // site timezone.
+		// "Now" as a site-local timestamp (equivalent to the discouraged current_time( 'timestamp' )),
+		// so it compares correctly against strtotime() of the stored site-local datetime values.
+		$now = time() + (int) ( get_option( 'gmt_offset' ) * HOUR_IN_SECONDS );
 
 		$start_ok = true;
 		$end_ok   = true;

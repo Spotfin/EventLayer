@@ -21,17 +21,16 @@ class SaveHandler {
 	 * @return void
 	 */
 	public function init() {
-		add_action( 'save_post_' . EventRulePostType::POST_TYPE, array( $this, 'save_meta_data' ), 10, 2 );
+		add_action( 'save_post_' . EventRulePostType::POST_TYPE, array( $this, 'save_meta_data' ) );
 	}
 
 	/**
 	 * Save meta data when an event rule is saved.
 	 *
-	 * @param int      $post_id Post ID.
-	 * @param \WP_Post $post    Post object.
+	 * @param int $post_id Post ID.
 	 * @return void
 	 */
-	public function save_meta_data( $post_id, $post ) {
+	public function save_meta_data( $post_id ) {
 		// Verify nonce.
 		$nonce = isset( $_POST['eventlayer_meta_nonce'] )
 			? sanitize_text_field( wp_unslash( $_POST['eventlayer_meta_nonce'] ) )
@@ -140,8 +139,8 @@ class SaveHandler {
 			? sanitize_text_field( wp_unslash( $_POST['schedule_end_time'] ) )
 			: '';
 
-		$start_raw = ( $sd && $st ) ? ( $sd . 'T' . $st ) : ( $sd ?: '' );
-		$end_raw   = ( $ed && $et ) ? ( $ed . 'T' . $et ) : ( $ed ?: '' );
+		$start_raw = ( $sd && $st ) ? ( $sd . 'T' . $st ) : ( $sd ? $sd : '' );
+		$end_raw   = ( $ed && $et ) ? ( $ed . 'T' . $et ) : ( $ed ? $ed : '' );
 
 		update_post_meta( $post_id, '_schedule_start', $start_raw );
 		update_post_meta( $post_id, '_schedule_end', $end_raw );

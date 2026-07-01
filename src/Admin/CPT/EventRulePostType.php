@@ -236,7 +236,7 @@ class EventRulePostType {
 	 */
 	public function change_title_placeholder( $title ) {
 		$screen = get_current_screen();
-		if ( $screen && $screen->post_type === self::POST_TYPE ) {
+		if ( $screen && self::POST_TYPE === $screen->post_type ) {
 			$title = __( 'Enter event rule name (e.g., "Button Click Tracking")', 'eventlayer' );
 		}
 		return $title;
@@ -272,7 +272,7 @@ class EventRulePostType {
 		switch ( $column ) {
 			case 'event_type':
 				$event_type = get_post_meta( $post_id, '_event_type', true );
-				echo esc_html( $event_type ?: '—' );
+				echo esc_html( $event_type ? $event_type : '—' );
 				break;
 
 			case 'location':

@@ -18,7 +18,7 @@
  */
 
 // Block direct access to this file.
-defined( 'ABSPATH' ) or die();
+defined( 'ABSPATH' ) || exit;
 
 // Load Composer's autoloader.
 require_once __DIR__ . '/vendor/autoload.php';

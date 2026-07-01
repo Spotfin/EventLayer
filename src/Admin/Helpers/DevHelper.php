@@ -73,14 +73,15 @@ class DevHelper {
 		}
 
 		// Redirect back with message.
+		$referer      = wp_get_referer();
 		$redirect_url = add_query_arg(
 			array(
-				'eventlayer_message' => urlencode( $message ),
+				'eventlayer_message' => rawurlencode( $message ),
 			),
-			wp_get_referer() ?: admin_url()
+			$referer ? $referer : admin_url()
 		);
 
-		wp_redirect( $redirect_url );
+		wp_safe_redirect( $redirect_url );
 		exit;
 	}
 

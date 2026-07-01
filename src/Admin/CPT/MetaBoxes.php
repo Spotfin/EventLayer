@@ -129,12 +129,12 @@ class MetaBoxes {
 	 * @return void
 	 */
 	public function enqueue_admin_scripts( $hook ) {
-		if ( ! in_array( $hook, array( 'post.php', 'post-new.php' ) ) ) {
+		if ( ! in_array( $hook, array( 'post.php', 'post-new.php' ), true ) ) {
 			return;
 		}
 
 		$screen = get_current_screen();
-		if ( ! $screen || $screen->post_type !== EventRulePostType::POST_TYPE ) {
+		if ( ! $screen || EventRulePostType::POST_TYPE !== $screen->post_type ) {
 			return;
 		}
 
@@ -178,7 +178,8 @@ class MetaBoxes {
 
 		// Get current values.
 		$event_type       = get_post_meta( $post->ID, '_event_type', true );
-		$site_location    = get_post_meta( $post->ID, '_site_location', true ) ?: 'all_pages';
+		$site_location    = get_post_meta( $post->ID, '_site_location', true );
+		$site_location    = $site_location ? $site_location : 'all_pages';
 		$trigger_delay    = get_post_meta( $post->ID, '_trigger_delay', true );
 		$stop_propagation = get_post_meta( $post->ID, '_stop_propagation', true );
 		$start            = get_post_meta( $post->ID, '_schedule_start', true );

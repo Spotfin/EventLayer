@@ -261,6 +261,7 @@ class AdminController {
 					<strong><?php esc_html_e( 'EventLayer:', 'eventlayer' ); ?></strong>
 					<?php
 					printf(
+						/* translators: 1: maximum number of event rules, 2: number of event rules remaining. */
 						esc_html__(
 							'You are approaching the limit of %1$d event rules. You have %2$d rules remaining.',
 							'eventlayer'
@@ -285,6 +286,7 @@ class AdminController {
 					<strong><?php esc_html_e( 'EventLayer:', 'eventlayer' ); ?></strong>
 					<?php
 					printf(
+						/* translators: %d: maximum number of event rules. */
 						esc_html__( 'You have reached the limit of %d event rules.', 'eventlayer' ),
 						$max_rules
 					);

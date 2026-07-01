@@ -101,11 +101,18 @@ $eventlayer_intro_text = __(
 						<?php foreach ( $recent_rules as $rule ) : ?>
 							<?php
 							$rule_event_type = get_post_meta( $rule->ID, '_event_type', true );
-							$rule_event_type = $rule_event_type ?: __( 'No event type', 'eventlayer' );
+							if ( ! $rule_event_type ) {
+								$rule_event_type = __( 'No event type', 'eventlayer' );
+							}
+
+							$rule_title = $rule->post_title;
+							if ( ! $rule_title ) {
+								$rule_title = __( '(no title)', 'eventlayer' );
+							}
 							?>
 							<li>
 								<a href="<?php echo esc_url( get_edit_post_link( $rule->ID ) ); ?>">
-									<?php echo esc_html( $rule->post_title ?: __( '(no title)', 'eventlayer' ) ); ?>
+									<?php echo esc_html( $rule_title ); ?>
 								</a>
 								- <?php echo esc_html( $rule_event_type ); ?>
 								<small>(<?php echo esc_html( $rule->post_status ); ?>)</small>
