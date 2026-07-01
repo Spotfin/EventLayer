@@ -14,12 +14,16 @@ if ( ! defined( 'ABSPATH' ) ) {
 use EventLayer\Data\EventRuleRepository;
 
 // Handle form submission.
-if ( isset( $_POST['submit_event_rule'] ) && wp_verify_nonce( $_POST['eventlayer_nonce'], 'eventlayer_add_rule' ) ) {
+$eventlayer_nonce = isset( $_POST['eventlayer_nonce'] )
+	? sanitize_text_field( wp_unslash( $_POST['eventlayer_nonce'] ) )
+	: '';
+
+if ( isset( $_POST['submit_event_rule'] ) && wp_verify_nonce( $eventlayer_nonce, 'eventlayer_add_rule' ) ) {
 	$repository = new EventRuleRepository();
 
-	$event_type = sanitize_text_field( $_POST['event_type'] );
-	$triggers   = sanitize_textarea_field( $_POST['triggers'] );
-	$parameters = sanitize_textarea_field( $_POST['parameters'] );
+	$event_type = isset( $_POST['event_type'] ) ? sanitize_text_field( wp_unslash( $_POST['event_type'] ) ) : '';
+	$triggers   = isset( $_POST['triggers'] ) ? sanitize_textarea_field( wp_unslash( $_POST['triggers'] ) ) : '';
+	$parameters = isset( $_POST['parameters'] ) ? sanitize_textarea_field( wp_unslash( $_POST['parameters'] ) ) : '';
 
 	if ( $repository->create( $event_type, $triggers, $parameters ) ) {
 		echo '<div class="notice notice-success"><p>'

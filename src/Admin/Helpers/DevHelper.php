@@ -60,7 +60,7 @@ class DevHelper {
 			wp_die( 'Unauthorized' );
 		}
 
-		$toggle = sanitize_text_field( $_GET['toggle'] ?? '' );
+		$toggle = isset( $_GET['toggle'] ) ? sanitize_text_field( wp_unslash( $_GET['toggle'] ) ) : '';
 
 		if ( 'enable' === $toggle ) {
 			\EventLayer\Pro\ProManager::set_pro_features_enabled( true );
@@ -88,8 +88,10 @@ class DevHelper {
 	 * Show development notices
 	 */
 	public static function show_dev_notices() {
+		// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only display of a dev notice; no data is processed.
 		if ( isset( $_GET['eventlayer_message'] ) ) {
-			$message = sanitize_text_field( $_GET['eventlayer_message'] );
+			// phpcs:ignore WordPress.Security.NonceVerification.Recommended -- Read-only display of a dev notice; no data is processed.
+			$message = sanitize_text_field( wp_unslash( $_GET['eventlayer_message'] ) );
 			?>
 			<div class="notice notice-success is-dismissible">
 				<p><strong>EventLayer Dev:</strong> <?php echo esc_html( $message ); ?></p>

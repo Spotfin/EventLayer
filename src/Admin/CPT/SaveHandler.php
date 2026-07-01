@@ -33,7 +33,10 @@ class SaveHandler {
 	 */
 	public function save_meta_data( $post_id, $post ) {
 		// Verify nonce.
-		if ( ! isset( $_POST['eventlayer_meta_nonce'] ) || ! wp_verify_nonce( $_POST['eventlayer_meta_nonce'], 'eventlayer_save_meta' ) ) {
+		$nonce = isset( $_POST['eventlayer_meta_nonce'] )
+			? sanitize_text_field( wp_unslash( $_POST['eventlayer_meta_nonce'] ) )
+			: '';
+		if ( ! wp_verify_nonce( $nonce, 'eventlayer_save_meta' ) ) {
 			return;
 		}
 
@@ -49,13 +52,13 @@ class SaveHandler {
 
 		// Save Event Type.
 		if ( isset( $_POST['event_type'] ) ) {
-			update_post_meta( $post_id, '_event_type', sanitize_text_field( $_POST['event_type'] ) );
+			update_post_meta( $post_id, '_event_type', sanitize_text_field( wp_unslash( $_POST['event_type'] ) ) );
 		}
 
 		// Save Site Location.
 		if ( isset( $_POST['site_location'] ) ) {
 			$allowed_locations = array( 'all_pages', 'homepage', 'specific_pages' );
-			$site_location     = sanitize_text_field( $_POST['site_location'] );
+			$site_location     = sanitize_text_field( wp_unslash( $_POST['site_location'] ) );
 			if ( in_array( $site_location, $allowed_locations, true ) ) {
 				update_post_meta( $post_id, '_site_location', $site_location );
 			}
@@ -73,7 +76,11 @@ class SaveHandler {
 
 		// Save Parent Selector.
 		if ( isset( $_POST['parent_selector'] ) ) {
-			update_post_meta( $post_id, '_parent_selector', sanitize_text_field( $_POST['parent_selector'] ) );
+			update_post_meta(
+				$post_id,
+				'_parent_selector',
+				sanitize_text_field( wp_unslash( $_POST['parent_selector'] ) )
+			);
 		}
 
 		// Save Multiple Toggle.
@@ -83,8 +90,8 @@ class SaveHandler {
 		// Save Child Selectors.
 		$child_selectors = array();
 		if ( isset( $_POST['child_selectors'] ) && is_array( $_POST['child_selectors'] ) ) {
-			foreach ( $_POST['child_selectors'] as $selector ) {
-				$selector = sanitize_text_field( $selector );
+			$raw_child_selectors = array_map( 'sanitize_text_field', wp_unslash( $_POST['child_selectors'] ) );
+			foreach ( $raw_child_selectors as $selector ) {
 				if ( ! empty( $selector ) ) {
 					$child_selectors[] = $selector;
 				}
@@ -95,7 +102,8 @@ class SaveHandler {
 		// Save Parameters.
 		$parameters = array();
 		if ( isset( $_POST['parameters'] ) && is_array( $_POST['parameters'] ) ) {
-			foreach ( $_POST['parameters'] as $index => $param ) {
+			$raw_parameters = map_deep( wp_unslash( $_POST['parameters'] ), 'sanitize_text_field' );
+			foreach ( $raw_parameters as $index => $param ) {
 				if ( empty( $param['name'] ) ) {
 					continue; // Skip empty parameter names.
 				}
