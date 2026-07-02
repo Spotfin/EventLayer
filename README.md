@@ -9,13 +9,14 @@ A modern WordPress plugin for managing custom GA4-style DataLayer events. EventL
 ## 🚀 Features
 
 - **Native WordPress Integration**: Uses custom post types for event rules with full revision history
-- **Advanced Event Configuration**: Define event types, triggers, parameters, and conditions
-- **Dynamic Parameter Extraction**: Extract values from element text, attributes, or URL parameters
-- **Site Location Targeting**: Control where events are active (all pages, homepage, specific pages)
-- **Event Control**: Configure trigger delays and event propagation
+- **Advanced Event Configuration**: Define event types, triggers, and parameters
+- **Dynamic Parameter Extraction**: Extract values from element text or attributes (URL parameters in Pro)
 - **Debug Mode**: Comprehensive logging for troubleshooting
-- **Modern Architecture**: PSR-4 autoloading, WordPress coding standards compliant
+- **Modern Architecture**: PHP 8.1, PSR-4 autoloading, WordPress coding standards compliant
 - **Performance Optimized**: Efficient JavaScript injection and event handling
+- **Extensible**: Gating provider + hook API for add-ons ([EventLayer Pro](https://eventlayerpro.com))
+
+**Pro features** (via the [EventLayer Pro](https://eventlayerpro.com) add-on): site location targeting, trigger delays, stop propagation, child selectors, per-instance element control, URL parameter extraction, scheduling, import/export, and unlimited rules (free is capped at 5). See `PRO-GATING.md` for the full split.
 
 ## 📋 Requirements
 
@@ -71,13 +72,13 @@ Parameters:
   - page_section: URL Parameter → section
 ```
 
-### Advanced Link Tracking
+### Advanced Link Tracking (some settings require Pro)
 ```
 Event Type: link_click
 Parent Selector: a[href*="external"]
-Site Location: All Pages
-Trigger Delay: 100ms
-Stop Propagation: Yes
+Site Location: All Pages       (Pro)
+Trigger Delay: 100ms           (Pro)
+Stop Propagation: Yes          (Pro)
 Parameters:
   - link_url: Element Attribute → href
   - link_text: Element Text
@@ -96,9 +97,9 @@ For a button like this:
 **EventLayer Configuration:**
 - **Event Type**: `link_click`
 - **Parent Selector**: `a.test-button`
-- **Site Location**: All Pages
-- **Trigger Delay**: 100ms
-- **Stop Propagation**: Yes
+- **Site Location**: All Pages *(Pro)*
+- **Trigger Delay**: 100ms *(Pro)*
+- **Stop Propagation**: Yes *(Pro)*
 
 **Parameters:**
 | Parameter Name | Target Type | Target Selector | Default Value |
@@ -140,21 +141,22 @@ Parent Selector: a.test-button[target="_blank"]
 
 ### Event Settings
 - **Event Type**: The GA4 event name sent to dataLayer
-- **Site Location**: Where the event should be active
-- **Trigger Delay**: Delay before event fires (in milliseconds)
-- **Stop Propagation**: Prevent event bubbling
+- **Site Location** *(Pro)*: Where the event should be active
+- **Trigger Delay** *(Pro)*: Delay before event fires (in milliseconds)
+- **Stop Propagation** *(Pro)*: Prevent event bubbling
+- **Schedule** *(Pro)*: Only fire between a start and end datetime
 
 ### Trigger Elements
-- **Parent Selector**: CSS selector for the trigger element
-- **Multiple Toggle**: Handle multiple instances of the selector
-- **Child Selectors**: Additional selectors for more specific targeting
+- **Parent Selector**: CSS selector for the trigger element; events fire on **all** matching elements
+- **Multiple Elements** *(Pro)*: Per-instance control over matched elements
+- **Child Selectors** *(Pro)*: Additional selectors for more specific targeting
 
 ### Parameters
 Each parameter can extract values using different target types:
 - **Static Value**: Uses the default value
 - **Element Text**: Extracts text content from target element
-- **Element Attribute**: Extracts attribute value
-- **URL Parameter**: Extracts value from query string
+- **Element Attribute**: Extracts attribute value (e.g. `href`, `data-*`)
+- **URL Parameter** *(Pro)*: Extracts value from query string
 
 ## 🎛️ Settings
 
@@ -167,8 +169,7 @@ Access plugin settings via **EventLayer → Settings**:
 
 ### Prerequisites
 - PHP 8.1+
-- Composer
-- Node.js (for asset building)
+- Composer (assets are plain CSS/JS; no Node or build step required)
 
 ### Setup
 ```bash
@@ -226,11 +227,12 @@ eventlayer/
 ├── readme.txt              # WordPress plugin readme
 ├── src/                    # Source code
 │   ├── Plugin.php          # Main plugin class
-│   ├── Admin/              # Admin functionality (CPT, meta boxes, controllers)
+│   ├── Admin/              # CPT, meta boxes, menu, settings, gating UI
 │   │   └── Views/          # Admin templates
+│   ├── Data/               # EventRuleRepository (all meta/query access)
 │   ├── Frontend/           # Script injection
-│   ├── Pro/                # Pro feature gating
-│   ├── Support/            # Helper utilities
+│   ├── Gating/             # GatingProvider seam (free/pro)
+│   ├── Model/              # EventRule, Parameter, enums
 │   ├── Assets/             # CSS and JavaScript
 │   └── Tests/              # Test files
 ├── languages/             # Translation files

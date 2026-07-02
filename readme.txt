@@ -14,17 +14,18 @@ EventLayer is a WordPress Plugin for managing custom DataLayer and GTM Events.
 
 EventLayer allows site administrators to define custom GA4-style DataLayer events directly from the WordPress admin panel. The plugin uses WordPress custom post types to store event rules and automatically injects JavaScript to push events to window.dataLayer for Google Tag Manager and Google Analytics 4 integration.
 
-**Key Features:**
+**Key Features (free):**
 
 * Define custom DataLayer events from WordPress admin using native post editing
 * Store event rules as WordPress posts with full revision history
 * Automatic JavaScript injection for event tracking
-* Advanced parameter configuration with dynamic value extraction
-* Site location targeting (all pages, homepage, specific pages)
-* Event trigger delays and propagation control
+* Dynamic parameter extraction from element text and attributes (e.g. href, data-*)
+* Events fire on every element matching your CSS selector
 * Debug mode for troubleshooting
 * Modern PHP architecture with PSR-4 autoloading
 * Clean, extensible codebase following WordPress coding standards
+
+**EventLayer Pro** adds site location targeting, trigger delays, propagation control, child selectors, per-instance element control, URL parameter extraction, scheduling, import/export, and unlimited rules (free includes up to 5 published rules). Learn more at https://eventlayerpro.com
 
 **Perfect for:**
 
@@ -56,6 +57,10 @@ While the plugin is designed to work seamlessly with Google Tag Manager, it push
 
 The plugin itself doesn't collect personal data. However, the events you create may collect data, so you should ensure your event configurations comply with GDPR and other privacy regulations.
 
+= What's the difference between free and Pro? =
+
+The free plugin covers custom click events with static values, element text, and element attribute extraction, firing on all elements matching your selector, with up to 5 published rules. EventLayer Pro adds site location targeting, trigger delays, propagation control, child selectors, per-instance element control, URL parameter extraction, scheduling, import/export, and unlimited rules.
+
 == Screenshots ==
 
 1. Event rules management interface
@@ -67,12 +72,11 @@ The plugin itself doesn't collect personal data. However, the events you create 
 = 1.0.0 =
 * Initial release
 * Custom post type architecture for event rules
-* Advanced parameter configuration with dynamic value extraction
-* Site location targeting
-* Event trigger delays and propagation control
+* Parameter configuration with element text and attribute extraction
 * Debug mode and comprehensive logging
 * WordPress coding standards compliance
 * Automatic JavaScript injection
+* Extension API for add-ons (gating provider, activation and config filters)
 
 == Upgrade Notice ==
 
