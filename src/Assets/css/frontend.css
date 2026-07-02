@@ -1,0 +1,33 @@
+/**
+ * EventLayer Frontend Styles
+ * 
+ * @package EventLayer
+ * @since 1.0.0
+ */
+
+/* Admin styles for EventLayer frontend elements */
+.eventlayer-hidden {
+    display: none !important;
+}
+
+.eventlayer-loading {
+    opacity: 0.6;
+    pointer-events: none;
+}
+
+/* Debug console styles */
+.eventlayer-debug {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    background: rgba(0, 0, 0, 0.8);
+    color: white;
+    padding: 10px;
+    border-radius: 4px;
+    font-family: monospace;
+    font-size: 12px;
+    max-width: 300px;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 9999;
+}
