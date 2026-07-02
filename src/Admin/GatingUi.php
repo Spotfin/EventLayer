@@ -40,7 +40,7 @@ class GatingUi {
 	 */
 	public function init() {
 		add_action( 'admin_notices', array( $this, 'maybe_show_rule_limit_notice' ) );
-		add_action( 'wp_dashboard_setup', array( $this, 'maybe_disable_add_new_button' ) );
+		add_action( 'admin_head', array( $this, 'maybe_hide_add_new_button' ) );
 		add_filter( 'post_row_actions', array( $this, 'maybe_limit_row_actions' ), 10, 2 );
 	}
 
@@ -81,7 +81,7 @@ class GatingUi {
 						$max_rules - $current_count
 					);
 					?>
-					<a href="<?php echo esc_url( Gating::provider()->get_upgrade_url() ); ?>" target="_blank">
+					<a href="<?php echo esc_url( Gating::provider()->get_upgrade_url() ); ?>" target="_blank" rel="noopener noreferrer">
 						<?php esc_html_e( 'Upgrade to EventLayer Pro for unlimited rules', 'eventlayer' ); ?>
 					</a>
 				</p>
@@ -102,7 +102,7 @@ class GatingUi {
 						$max_rules
 					);
 					?>
-					<a href="<?php echo esc_url( Gating::provider()->get_upgrade_url() ); ?>" target="_blank">
+					<a href="<?php echo esc_url( Gating::provider()->get_upgrade_url() ); ?>" target="_blank" rel="noopener noreferrer">
 						<?php esc_html_e( 'Upgrade to EventLayer Pro for unlimited rules', 'eventlayer' ); ?>
 					</a>
 				</p>
@@ -112,34 +112,31 @@ class GatingUi {
 	}
 
 	/**
-	 * Maybe disable the "Add New" button when limit reached.
+	 * Hide the "Add New" button with CSS on event rule screens when the
+	 * limit is reached. Runs on admin_head so it covers the list and edit
+	 * screens (the old wp_dashboard_setup hook only fired on the Dashboard).
 	 *
 	 * @return void
 	 */
-	public function maybe_disable_add_new_button() {
-		if ( ! $this->can_create_rule() ) {
-			add_action( 'admin_head', array( $this, 'hide_add_new_button' ) );
-		}
-	}
-
-	/**
-	 * Hide the "Add New" button with CSS.
-	 *
-	 * @return void
-	 */
-	public function hide_add_new_button() {
+	public function maybe_hide_add_new_button() {
 		$screen = get_current_screen();
-		if ( $screen && EventRulePostType::POST_TYPE === $screen->post_type ) {
-			?>
-			<style>
-				.page-title-action,
-				.row-actions .inline,
-				.row-actions .duplicate {
-					display: none !important;
-				}
-			</style>
-			<?php
+		if ( ! $screen || EventRulePostType::POST_TYPE !== $screen->post_type ) {
+			return;
 		}
+
+		if ( $this->can_create_rule() ) {
+			return;
+		}
+
+		?>
+		<style>
+			.page-title-action,
+			.row-actions .inline,
+			.row-actions .duplicate {
+				display: none !important;
+			}
+		</style>
+		<?php
 	}
 
 	/**

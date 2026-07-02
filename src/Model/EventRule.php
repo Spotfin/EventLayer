@@ -22,7 +22,7 @@ final class EventRule {
 	 * @param string       $status           Post status ('' when unknown).
 	 * @param string       $event_type       GA4 event name.
 	 * @param SiteLocation $site_location    Where the rule is active.
-	 * @param int|null     $trigger_delay    Delay in ms; null when never saved.
+	 * @param int          $trigger_delay    Delay in ms (registered meta default is 0).
 	 * @param bool         $stop_propagation Whether to stop event propagation.
 	 * @param string       $parent_selector  CSS selector triggering the event.
 	 * @param bool         $multiple_toggle  Track multiple selector matches.
@@ -37,7 +37,7 @@ final class EventRule {
 		public readonly string $status,
 		public readonly string $event_type,
 		public readonly SiteLocation $site_location,
-		public readonly ?int $trigger_delay,
+		public readonly int $trigger_delay,
 		public readonly bool $stop_propagation,
 		public readonly string $parent_selector,
 		public readonly bool $multiple_toggle,

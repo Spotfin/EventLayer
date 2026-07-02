@@ -100,16 +100,9 @@ class EventRuleRepository {
 	 * @return int
 	 */
 	public function count_published(): int {
-		$ids = get_posts(
-			array(
-				'post_type'      => EventRulePostType::POST_TYPE,
-				'post_status'    => 'publish',
-				'posts_per_page' => -1,
-				'fields'         => 'ids',
-			)
-		);
+		$counts = wp_count_posts( EventRulePostType::POST_TYPE );
 
-		return count( $ids );
+		return (int) ( $counts->publish ?? 0 );
 	}
 
 	/**
@@ -122,12 +115,7 @@ class EventRuleRepository {
 	public function save( EventRule $rule, int $post_id ): void {
 		update_post_meta( $post_id, '_event_type', $rule->event_type );
 		update_post_meta( $post_id, '_site_location', $rule->site_location->value );
-
-		// Null means "never saved"; keep it that way rather than writing 0.
-		if ( null !== $rule->trigger_delay ) {
-			update_post_meta( $post_id, '_trigger_delay', $rule->trigger_delay );
-		}
-
+		update_post_meta( $post_id, '_trigger_delay', $rule->trigger_delay );
 		update_post_meta( $post_id, '_stop_propagation', $rule->stop_propagation ? 1 : 0 );
 		update_post_meta( $post_id, '_parent_selector', $rule->parent_selector );
 		update_post_meta( $post_id, '_multiple_toggle', $rule->multiple_toggle ? 1 : 0 );
@@ -153,7 +141,6 @@ class EventRuleRepository {
 	 * @return EventRule
 	 */
 	private function hydrate( object $post ): EventRule {
-		$trigger_delay   = get_post_meta( $post->ID, '_trigger_delay', true );
 		$child_selectors = maybe_unserialize( get_post_meta( $post->ID, '_child_selectors', true ) );
 		$raw_parameters  = maybe_unserialize( get_post_meta( $post->ID, '_parameters', true ) );
 
@@ -173,7 +160,8 @@ class EventRuleRepository {
 			status: (string) ( $post->post_status ?? '' ),
 			event_type: sanitize_text_field( get_post_meta( $post->ID, '_event_type', true ) ),
 			site_location: SiteLocation::from_meta( (string) get_post_meta( $post->ID, '_site_location', true ) ),
-			trigger_delay: '' === $trigger_delay ? null : absint( $trigger_delay ),
+			// The registered meta default is 0, so unset meta reads as 0 (never '').
+			trigger_delay: absint( get_post_meta( $post->ID, '_trigger_delay', true ) ),
 			stop_propagation: (bool) get_post_meta( $post->ID, '_stop_propagation', true ),
 			parent_selector: sanitize_text_field( get_post_meta( $post->ID, '_parent_selector', true ) ),
 			multiple_toggle: (bool) get_post_meta( $post->ID, '_multiple_toggle', true ),

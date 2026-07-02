@@ -85,7 +85,7 @@ class SaveHandler {
 				: $existing->event_type,
 			site_location: $this->posted_site_location() ?? $existing->site_location,
 			trigger_delay: isset( $_POST['trigger_delay'] )
-				? absint( $_POST['trigger_delay'] )
+				? absint( wp_unslash( $_POST['trigger_delay'] ) )
 				: $existing->trigger_delay,
 			stop_propagation: isset( $_POST['stop_propagation'] ),
 			parent_selector: isset( $_POST['parent_selector'] )

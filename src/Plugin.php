@@ -71,6 +71,13 @@ class Plugin {
 	 */
 	public static function get_instance( $plugin_file = '' ) {
 		if ( null === self::$instance ) {
+			if ( '' === $plugin_file ) {
+				_doing_it_wrong(
+					__METHOD__,
+					'get_instance() must be called with the main plugin file path before it is used as an accessor.',
+					'1.0.0'
+				);
+			}
 			self::$instance = new self( $plugin_file );
 		}
 		return self::$instance;

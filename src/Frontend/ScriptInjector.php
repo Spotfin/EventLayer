@@ -54,9 +54,9 @@ class ScriptInjector {
 		// Enqueue frontend script.
 		wp_enqueue_script(
 			'eventlayer-frontend',
-			plugin_dir_url( __FILE__ ) . '../Assets/js/frontend.js',
+			\EventLayer\Plugin::get_instance()->get_plugin_url( 'src/Assets/js/frontend.js' ),
 			array(),
-			'1.0.0',
+			\EventLayer\Plugin::VERSION,
 			true
 		);
 
@@ -86,9 +86,9 @@ class ScriptInjector {
 		// Enqueue frontend styles.
 		wp_enqueue_style(
 			'eventlayer-frontend',
-			plugin_dir_url( __FILE__ ) . '../Assets/css/frontend.css',
+			\EventLayer\Plugin::get_instance()->get_plugin_url( 'src/Assets/css/frontend.css' ),
 			array(),
-			'1.0.0'
+			\EventLayer\Plugin::VERSION
 		);
 	}
 
@@ -142,7 +142,7 @@ class ScriptInjector {
 			'title'           => $rule->title,
 			'eventType'       => $rule->event_type,
 			'siteLocation'    => $rule->site_location->value,
-			'triggerDelay'    => null === $rule->trigger_delay ? 0 : $rule->trigger_delay,
+			'triggerDelay'    => $rule->trigger_delay,
 			'stopPropagation' => $rule->stop_propagation,
 			'parentSelector'  => $rule->parent_selector,
 			'multipleToggle'  => $rule->multiple_toggle,
@@ -184,23 +184,24 @@ class ScriptInjector {
 	 * @return bool
 	 */
 	private function is_within_schedule( $start, $end ) {
-		// "Now" as a site-local timestamp (equivalent to the discouraged current_time( 'timestamp' )),
-		// so it compares correctly against strtotime() of the stored site-local datetime values.
-		$now = time() + (int) ( get_option( 'gmt_offset' ) * HOUR_IN_SECONDS );
+		// Interpret the stored site-local datetimes in the site's real timezone
+		// (wp_timezone() honors timezone strings and DST, unlike gmt_offset math).
+		$timezone = wp_timezone();
+		$now      = new \DateTimeImmutable( 'now', $timezone );
 
 		$start_ok = true;
 		$end_ok   = true;
 
 		if ( ! empty( $start ) ) {
-			$start_ts = strtotime( str_replace( 'T', ' ', $start ) );
-			if ( $start_ts && $now < $start_ts ) {
+			$start_dt = date_create_immutable( str_replace( 'T', ' ', $start ), $timezone );
+			if ( $start_dt && $now < $start_dt ) {
 				$start_ok = false;
 			}
 		}
 
 		if ( ! empty( $end ) ) {
-			$end_ts = strtotime( str_replace( 'T', ' ', $end ) );
-			if ( $end_ts && $now > $end_ts ) {
+			$end_dt = date_create_immutable( str_replace( 'T', ' ', $end ), $timezone );
+			if ( $end_dt && $now > $end_dt ) {
 				$end_ok = false;
 			}
 		}

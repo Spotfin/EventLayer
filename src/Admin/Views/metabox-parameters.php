@@ -147,7 +147,7 @@
 	<?php if ( ! \EventLayer\Gating\Gating::provider()->has_feature( 'url_parameter' ) ) : ?>
 	<p class="description" style="margin-top: 8px; font-size: 12px; color: #666;">
 		🔒 <?php esc_html_e( 'Upgrade to Pro', 'eventlayer' ); ?>
-		<a href="<?php echo esc_url( \EventLayer\Gating\Gating::provider()->get_upgrade_url() ); ?>" target="_blank">
+		<a href="<?php echo esc_url( \EventLayer\Gating\Gating::provider()->get_upgrade_url() ); ?>" target="_blank" rel="noopener noreferrer">
 			<?php esc_html_e( 'for URL Parameter extraction', 'eventlayer' ); ?>
 		</a>
 	</p>

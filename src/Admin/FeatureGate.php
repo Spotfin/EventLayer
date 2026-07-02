@@ -36,7 +36,7 @@ final class FeatureGate {
 			<p style="margin-bottom: 10px;"><?php echo esc_html( $description ); ?></p>
 			<a href="<?php echo esc_url( Gating::provider()->get_upgrade_url() ); ?>"
 				class="button button-primary"
-				target="_blank">
+				target="_blank" rel="noopener noreferrer">
 				<?php esc_html_e( 'Upgrade to EventLayer Pro', 'eventlayer' ); ?>
 			</a>
 		</div>

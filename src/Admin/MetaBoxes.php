@@ -96,17 +96,17 @@ class MetaBoxes {
 
 		wp_enqueue_script(
 			'eventlayer-admin',
-			plugin_dir_url( __FILE__ ) . '../Assets/js/admin.js',
+			\EventLayer\Plugin::get_instance()->get_plugin_url( 'src/Assets/js/admin.js' ),
 			array( 'jquery' ),
-			'1.0.0',
+			\EventLayer\Plugin::VERSION,
 			true
 		);
 
 		wp_enqueue_style(
 			'eventlayer-admin',
-			plugin_dir_url( __FILE__ ) . '../Assets/css/admin.css',
+			\EventLayer\Plugin::get_instance()->get_plugin_url( 'src/Assets/css/admin.css' ),
 			array(),
-			'1.0.0'
+			\EventLayer\Plugin::VERSION
 		);
 	}
 
@@ -124,7 +124,7 @@ class MetaBoxes {
 		$rule             = $this->repository->find( $post->ID );
 		$event_type       = $rule->event_type;
 		$site_location    = $rule->site_location->value;
-		$trigger_delay    = null === $rule->trigger_delay ? '' : $rule->trigger_delay;
+		$trigger_delay    = $rule->trigger_delay;
 		$stop_propagation = $rule->stop_propagation ? 1 : 0;
 
 		$start_date = $rule->schedule_start ? substr( $rule->schedule_start, 0, 10 ) : '';

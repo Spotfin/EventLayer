@@ -41,7 +41,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 				
 				<h3><?php esc_html_e( 'Documentation', 'eventlayer' ); ?></h3>
 				<p><?php esc_html_e( 'For help and documentation, visit:', 'eventlayer' ); ?> 
-					<a href="https://eventlayerpro.com/docs" target="_blank">https://eventlayerpro.com/docs</a>
+					<a href="https://eventlayerpro.com/docs" target="_blank" rel="noopener noreferrer">https://eventlayerpro.com/docs</a>
 				</p>
 			</div>
 		</div>

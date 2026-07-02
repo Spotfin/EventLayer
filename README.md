@@ -85,7 +85,7 @@ Parameters:
   - click_source: Static Value → "navigation"
 ```
 
-## � Implementation Examples
+## 🧩 Implementation Examples
 
 ### External Link Button Tracking
 
@@ -137,7 +137,7 @@ Parent Selector: a[href="https://google.com"]
 Parent Selector: a.test-button[target="_blank"]
 ```
 
-## �🛠️ Event Configuration
+## 🛠️ Event Configuration
 
 ### Event Settings
 - **Event Type**: The GA4 event name sent to dataLayer
