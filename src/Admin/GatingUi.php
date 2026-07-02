@@ -81,7 +81,8 @@ class GatingUi {
 						$max_rules - $current_count
 					);
 					?>
-					<a href="<?php echo esc_url( Gating::provider()->get_upgrade_url() ); ?>" target="_blank" rel="noopener noreferrer">
+					<a href="<?php echo esc_url( Gating::provider()->get_upgrade_url() ); ?>"
+						target="_blank" rel="noopener noreferrer">
 						<?php esc_html_e( 'Upgrade to EventLayer Pro for unlimited rules', 'eventlayer' ); ?>
 					</a>
 				</p>
@@ -102,7 +103,8 @@ class GatingUi {
 						$max_rules
 					);
 					?>
-					<a href="<?php echo esc_url( Gating::provider()->get_upgrade_url() ); ?>" target="_blank" rel="noopener noreferrer">
+					<a href="<?php echo esc_url( Gating::provider()->get_upgrade_url() ); ?>"
+						target="_blank" rel="noopener noreferrer">
 						<?php esc_html_e( 'Upgrade to EventLayer Pro for unlimited rules', 'eventlayer' ); ?>
 					</a>
 				</p>
